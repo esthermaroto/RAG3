@@ -8,14 +8,13 @@ La IA generativa es un tipo de inteligencia artificial que puede crear contenido
 
 ## ¿Qué puedes hacer con IA generativa?
 
-- Generar texto: Puedes crear artículos, historias, poemas y más utilizando modelos de lenguaje como GPT-3.
-- Crear imágenes: Puedes generar imágenes y arte utilizando modelos como DALL-E o Midjourney.
-- Componer música: Puedes crear melodías y composiciones musicales utilizando IA generativa.
-- Automatizar tareas: Puedes utilizar IA generativa para automatizar tareas repetitivas y mejorar la eficiencia en el trabajo.
-- Crear chatbots: Puedes desarrollar chatbots inteligentes que interactúan con los usuarios de manera natural.
-- Generar código: Puedes utilizar IA generativa para escribir y depurar código, lo que puede acelerar el proceso de desarrollo.
-- Mejorar la creatividad: Puedes utilizar IA generativa como una herramienta para inspirarte y mejorar tu creatividad en diferentes campos.
-- Generar contenido personalizado: Puedes crear contenido adaptado a las preferencias y necesidades de los usuarios.
+- ✏️ Generar texto: Puedes crear artículos, historias, poemas y más utilizando modelos de lenguaje como GPT-3.
+- 🌅 Crear imágenes: Puedes generar imágenes y arte utilizando modelos como DALL-E o Midjourney.
+- 🎶 Componer música: Puedes crear melodías y composiciones musicales utilizando IA generativa.
+- 📋 Automatizar tareas: Puedes utilizar IA generativa para automatizar tareas repetitivas y mejorar la eficiencia en el trabajo.
+- 🤖 Crear chatbots: Puedes desarrollar chatbots inteligentes que interactúan con los usuarios de manera natural.
+- 👩🏼‍💻 Generar código: Puedes utilizar IA generativa para escribir y depurar código, lo que puede acelerar el proceso de desarrollo.
+- 💡 Mejorar la creatividad: Puedes utilizar IA generativa como una herramienta para inspirarte y mejorar tu creatividad en diferentes campos.
 
 Y estos son solo algunos ejemplos. Pero lo importante aquí es que entiendas que la IA Generativa tiene como principal objetivo crear.
 
@@ -68,18 +67,18 @@ Para ver cuántos modelos tienes descargados, puedes ejecutar el siguiente coman
 
 ```bash
 ollama list
-
+```
 
 Ok, ¿y ahora qué hago con esto? Puedes ejecutar este modelo en concreto:
 
 ```bash
-ollama run mistral "¿Qué es IA generativa?"
+ollama run mistral-nemo "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
 ```
 
 O incluso lo puedes ejecutar para que puedas llamarlo de forma programática, a través de un API REST:
 
 ```bash
-ollama run mistral
+ollama run mistral-nemo
 ```
 
 Para saber qué modelos tienes ejecutandose, puedes lanzar el siguiente comando:
@@ -92,7 +91,7 @@ Y a partir de este momento también puedes hacer peticiones a través de un clie
 
 ```bash
 curl http://localhost:11434/api/generate \
--d '{ "model": "mistral", "stream": false, "prompt":"Mejorame este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"}' \
+-d '{ "model": "mistral-nemo", "stream": false, "prompt":"Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"}' \
 | jq .response
 ```
 
@@ -101,26 +100,35 @@ La lista de modelos disponibles para Ollama la puedes encontrar aquí: https://o
 Si quieres probar otros la forma es la misma:
 
 ```bash
-ollama pull gemma3
+ollama run gemma3 "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
 ```
 
-```bash
-ollama run gemma3 "¿Qué es IA generativa?"
-```
-
-O incluso Deepsekk-r1 que está ahora muy de moda:
+O incluso Deepseek-r1 que está ahora muy de moda:
 
 ```bash
-ollama run deepseek-r1 "¿Qué es IA generativa?"
+ollama run deepseek-r1 "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
 ```
 
 Al igual que en Docker, no hace falta hacer primeramente un `pull` del modelo, sino que puedes ejecutarlo directamente y si no tienes el modelo en local se encargará de descargarlo.
+
 ## Docker Model Runner
 
-Esta otra opción está todavía en fase beta y no está soportada en todos los sistemas operativos o arquitecturas. Pero lo único que debes hacer en este caso, si tienes instalado Docker Desktop es tenerlo actualizado, al menos a la versión 
+Hace apenas unos días, Docker anunció [Docker Model Runner](https://docs.docker.com/desktop/features/model-runner/). Esta otra opción está todavía en fase beta y no está soportada en todos los sistemas operativos o arquitecturas. Pero lo único que debes hacer en este caso, si tienes instalado Docker Desktop es tenerlo actualizado, al menos a la versión 4.40 o superior.
 
 
 El "problema" de estos dos primeros es que necesitas hardware suficiente para poder ejecutar los modelos en tu local y que esto no sea un sufrimiento. Por ejemplo, en el repo de GitHub de ollama se indica lo siguiente:
 
 > [Note]
 >You should have at least 8 GB of RAM available to run the 7B models, 16 GB to run the 13B models, and 32 GB to run the 33B models.
+
+Y como te puedes imaginar, no todo el mundo tiene maquinones para poder ejecutar esto.
+
+## GitHub Models
+
+La tercera opción que puedes utilizar, si las anteriores no son posibles para ti es Github Models. El cual es un marketplace de modelos de IA que puedes utilizar en fase de desarrollo de forma gratuita. Para poder utilizarlo solo necesitas tener una cuenta de GitHub y generar un Personal Access Token que nisiquiera necesita tener ningún scope.
+
+## AI Toolkit for Visual Studio
+
+Y ya para terminar, si vas a utilizar Visual Studio Code como parte de tu entorno de desarrollo tienes una extensión disponible muy interesante que se llama AI Toolkit for Visual Studio, la cual te va a permitir interactuar de una forma bastante sencilla con los modelos tanto de Ollama como de Github Models (además de otras opciones que no hemos visto aquí). Esta extensión forma parte de este DevContainer.
+
+Puedo cargar directamente los modelos que ya he descargado de Ollama y ejecutarlos utilizando el Playground que ofrece.
