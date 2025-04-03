@@ -60,7 +60,7 @@ ollama list
 y descargar alguno de los modelos, por ejemplo el de Mistral (no te preocupes, ya veremos más adelante qué modelos son los que vas a ir necesitando)
 
 ```bash
-ollama pull mistral
+ollama pull mistral-nemo
 ```
 
 Para ver cuántos modelos tienes descargados, puedes ejecutar el siguiente comando:
@@ -110,6 +110,12 @@ ollama run deepseek-r1 "Mejora este título para un vídeo de YouTube con emojis
 ```
 
 Al igual que en Docker, no hace falta hacer primeramente un `pull` del modelo, sino que puedes ejecutarlo directamente y si no tienes el modelo en local se encargará de descargarlo.
+
+Y también puedes eliminar cualquiera de los modelos descargados usando el mismo estilo:
+
+```bash
+ollama rm mistral
+```
 
 ## Docker Model Runner
 
