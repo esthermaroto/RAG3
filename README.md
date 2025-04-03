@@ -1,6 +1,6 @@
-# Hoy empiezo con IA Generativa
+# 🚀✨ Hoy empiezo con IA Generativa 🌟🤖
 
-¡Hola developer! Este repo contiene todo lo que necesitas para empezar a trabajar con IA generativa. Desde qué puedes usar para empezar gratis en tu máquina local, o en la nube, hasta ejemplos de los diferentes conceptos que necesitas aprender para poder usar IA generativa en tus proyectos. La idea de este repo es llevarlo a una serie de casos prácticos que te ayuden a entender cómo funciona la IA generativa pero también que sirva para algo útil 🤓. En mi caso lo voy a basar en diferentes necesidades que tengo a la hora de publicar un nuevo vídeo. Pero... empecemos por el principio.
+¡Hola developer 👋🏻! Este repo contiene todo lo que necesitas para empezar a trabajar con IA generativa. Desde qué puedes usar para empezar gratis en tu máquina local, o en la nube, hasta ejemplos de los diferentes conceptos que necesitas aprender para poder usar IA generativa en tus proyectos. Pero todo ello desde el punto de vista del desarrollador, cómo realmente puedes integrar esto dentro de una aplicación que tú estés desarrollando, dejando a un lado las aplicaciones de terceros que circulan por la red. Este repo forma parte de mi serie sobre IA Generativa en mi canal de YouTube.
 
 ## ¿Qué es IA generativa?
 
@@ -28,7 +28,7 @@ Lo primero que necesitas es un entorno de desarrollo y lo más importante de tod
 - Docker Model Runner: Relativamente nuevo y no está soportado todavía en todos los sistemas operativos o arquitecturas pero si eres un desarrollador que trabaja con contenedores, puede ser una opción interesante para explorar. [Docker Model Runner](https://www.docker.com/)
 - GitHub Models: esta última opción, también gratuita, te permite poder acceder a una variedad de modelos de IA generativa que puedes utilizar directamente en tus proyectos en fase de desarrollo y no necesitas instalar nada adicional. [GitHub Models](https://github.com/)
 
-# Ollama
+### Ollama
 
 Puedes instalarlo localmente, por ejemplo en tu Mac a través de Homebrew:
 
@@ -109,6 +109,12 @@ O incluso Deepseek-r1 que está ahora muy de moda:
 ollama run deepseek-r1 "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
 ```
 
+O includo de la gama Phi:
+
+```bash
+ollama run phi4-mini "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+```
+
 Al igual que en Docker, no hace falta hacer primeramente un `pull` del modelo, sino que puedes ejecutarlo directamente y si no tienes el modelo en local se encargará de descargarlo.
 
 Y también puedes eliminar cualquiera de los modelos descargados usando el mismo estilo:
@@ -117,23 +123,162 @@ Y también puedes eliminar cualquiera de los modelos descargados usando el mismo
 ollama rm mistral
 ```
 
-## Docker Model Runner
+#### Ollama en local y el entorno de desarrollo dentro del Dev Container
+
+```bash
+curl http://localhost:11434/api/generate \
+-d '{ "model": "mistral-nemo", "stream": false, "prompt":"Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"}' \
+| jq .response
+```
+
+Ollama escucha por defecto por el puerto 11434. Si quieres llamar a Ollama que está fuera de tu Dev Container deberías de usar `http://host.docker.internal:11434/api/generate`Hará que hablemos con el Ollama que tenemos en nuestro host.
+
+```bash
+curl http://host.docker.internal:11434/api/generate \
+-d '{ "model": "mistral-nemo", "stream": false, "prompt":"Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"}' \
+| jq .response
+```
+
+También puedo cambiar el host del CLI de Ollama de la siguiente forma:
+
+```bash
+export OLLAMA_HOST=http://host.docker.internal:11434
+```
+
+y ahora desde dentro del Dev Container llamar al Ollama de fuera. Voy a borrar el modelo que descargué dentro del Dev Container, para que no haya dudas:
+
+```bash
+ollama rm mistral-nemo
+```
+
+y ahora intento ejecutar este modelo que tengo el host:
+
+```bash
+OLLAMA_HOST=http://host.docker.internal:11434 ollama run mistral-nemo "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+```
+
+O cualquier otro:
+
+```bash
+OLLAMA_HOST=http://host.docker.internal:11434 ollama run phi4-mini "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+```
+
+### Docker Model Runner
 
 Hace apenas unos días, Docker anunció [Docker Model Runner](https://docs.docker.com/desktop/features/model-runner/). Esta otra opción está todavía en fase beta y no está soportada en todos los sistemas operativos o arquitecturas. Pero lo único que debes hacer en este caso, si tienes instalado Docker Desktop es tenerlo actualizado, al menos a la versión 4.40 o superior.
 
+Este funciona de una forma similar a Ollama. Primero debes verificar que este lo tienes funcionando con tu instalación de Docker Desktop:
 
-El "problema" de estos dos primeros es que necesitas hardware suficiente para poder ejecutar los modelos en tu local y que esto no sea un sufrimiento. Por ejemplo, en el repo de GitHub de ollama se indica lo siguiente:
+```bash
+docker model status
+```
+
+>[!Note]
+> Puedes usar estos comandos dentro del Dev Container porque he añadido una Feature que te permite apuntar al Docker del host.
+
+y debería de devolverte: `Docker Model Runner is running`
+
+Y puedes hacer lo mismo que hemos visto hasta ahora:
+
+Descargarte modelos (para ello puedes ver [los modelos disponibles a día de hoy en Docker Hub](https://hub.docker.com/u/ai)):
+
+```bash
+docker model pull ai/mistral-nemo
+```
+
+Ejecutarlos:
+
+```bash
+docker model run ai/mistral-nemo "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+```
+
+u otros:
+
+```bash
+docker model run ai/phi4 "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+```
+
+Y dentro del Dev Container podemos invocarlo usando cURL:
+
+```bash
+curl http://model-runner.docker.internal/engines/llama.cpp/v1/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "ai/mistral-nemo",
+        "prompt": "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa",
+        "temperature": 0.7
+    }' \
+    | jq .choices[0].text
+```
+
+El "problema" de estos dos primeros es que necesitas hardware, o arquitecturas, suficiente para poder ejecutar los modelos en tu local y que esto no sea un sufrimiento. Por ejemplo, en el repo de GitHub de ollama se indica lo siguiente:
 
 > [Note]
 >You should have at least 8 GB of RAM available to run the 7B models, 16 GB to run the 13B models, and 32 GB to run the 33B models.
 
 Y como te puedes imaginar, no todo el mundo tiene maquinones para poder ejecutar esto.
 
-## GitHub Models
+### GitHub Models
 
 La tercera opción que puedes utilizar, si las anteriores no son posibles para ti es Github Models. El cual es un marketplace de modelos de IA que puedes utilizar en fase de desarrollo de forma gratuita. Para poder utilizarlo solo necesitas tener una cuenta de GitHub y generar un Personal Access Token que nisiquiera necesita tener ningún scope.
 
-## AI Toolkit for Visual Studio
+```bash
+GITHUB_TOKEN=<YOUR_GITHUB_TOKEN>
+```
+
+y ya solo con esto puedes hacer llamadas a los diferentes modelos que hay en el catalogo de GitHub Models:
+
+```bash
+curl -X POST "https://models.inference.ai.azure.com/chat/completions" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $GITHUB_TOKEN" \
+    -d '{
+        "messages": [           
+            {
+                "role": "user",
+                "content": "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+            }
+        ],       
+        "model": "Mistral-Nemo"
+    }' \
+    | jq -r .choices[0].message.content
+```
+
+Y si queremos otro modelo la llamada es la misma, solo cambia el valor de `model`:
+
+```bash
+curl -X POST "https://models.inference.ai.azure.com/chat/completions" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $GITHUB_TOKEN" \
+    -d '{
+        "messages": [           
+            {
+                "role": "user",
+                "content": "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+            }
+        ],        
+        "model": "DeepSeek-R1"
+    }' \
+    | jq -r .choices[0].message.content
+```
+
+```bash
+curl -X POST "https://models.inference.ai.azure.com/chat/completions" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $GITHUB_TOKEN" \
+    -d '{
+        "messages": [           
+            {
+                "role": "user",
+                "content": "Mejora este título para un vídeo de YouTube con emojis: Hoy empiezo con IA Generativa"
+            }
+        ],        
+        "model": "Phi-4"
+    }' \
+    | jq -r .choices[0].message.content
+```
+
+### AI Toolkit for Visual Studio
 
 Y ya para terminar, si vas a utilizar Visual Studio Code como parte de tu entorno de desarrollo tienes una extensión disponible muy interesante que se llama AI Toolkit for Visual Studio, la cual te va a permitir interactuar de una forma bastante sencilla con los modelos tanto de Ollama como de Github Models (además de otras opciones que no hemos visto aquí). Esta extensión forma parte de este DevContainer.
 
