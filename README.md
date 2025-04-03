@@ -8,8 +8,8 @@ La IA generativa es un tipo de inteligencia artificial que puede crear contenido
 
 ## ¿Qué puedes hacer con IA generativa?
 
-- ✏️ Generar texto: Puedes crear artículos, historias, poemas y más utilizando modelos de lenguaje como GPT-3.
-- 🌅 Crear imágenes: Puedes generar imágenes y arte utilizando modelos como DALL-E o Midjourney.
+- ✏️ Generar texto: Puedes crear artículos, historias, poemas y más.
+- 🌅 Crear imágenes: Puedes generar imágenes, modificarlas, etcétera.
 - 🎶 Componer música: Puedes crear melodías y composiciones musicales utilizando IA generativa.
 - 📋 Automatizar tareas: Puedes utilizar IA generativa para automatizar tareas repetitivas y mejorar la eficiencia en el trabajo.
 - 🤖 Crear chatbots: Puedes desarrollar chatbots inteligentes que interactúan con los usuarios de manera natural.
