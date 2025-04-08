@@ -1,0 +1,980 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary-color: #ff0000;
+    --secondary-color: #282828;
+    --glow-color: rgba(255, 0, 0, 0.6);
+    --text-color: #ffffff;
+    --bg-dark: #121212;
+    --bg-card: #1e1e1e;
+    --accent-color: #ff5252;
+    --magic-color-1: #ff42a1;
+    --magic-color-2: #4e42ff;
+    --magic-color-3: #42d6ff;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-weight: 400;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(78, 66, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 66, 161, 0.03) 0%, transparent 50%);
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px var(--glow-color);
+    position: relative;
+    display: inline-block;
+}
+
+h1 i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #aaaaaa;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 24px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.input-container {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* Decoraciones de emojis */
+.emoji-decoration {
+    position: absolute;
+    font-size: 32px;
+    opacity: 0.7;
+    z-index: 1;
+    animation: float 3s ease-in-out infinite;
+}
+
+.emoji-decoration.left {
+    left: -50px;
+    top: 30px;
+    transform: rotate(-15deg);
+}
+
+.emoji-decoration.right {
+    right: -50px;
+    top: 30px;
+    transform: rotate(15deg);
+    animation-delay: 1.5s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(-15deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(-5deg);
+    }
+}
+
+.emoji-decoration.right {
+    animation: float-right 3s ease-in-out infinite;
+}
+
+@keyframes float-right {
+    0%, 100% {
+        transform: translateY(0) rotate(15deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(5deg);
+    }
+}
+
+.textarea-container {
+    position: relative;
+    width: 100%;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid var(--primary-color);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    font-size: 18px;
+    resize: none;
+    box-shadow: 0 0 20px var(--glow-color);
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.counters-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 3;
+}
+
+.counter-badge {
+    background: linear-gradient(135deg, var(--magic-color-2), var(--magic-color-3));
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    cursor: help;
+}
+
+/* Estilo específico para el contador de tokens */
+#token-counter {
+    background: linear-gradient(135deg, var(--magic-color-2), var(--magic-color-3));
+}
+
+/* Estilo específico para el contador de caracteres */
+#char-counter {
+    background: linear-gradient(135deg, var(--magic-color-1), var(--magic-color-2));
+}
+
+/* Estilo específico para el contador de palabras */
+#word-counter {
+    background: linear-gradient(135deg, var(--magic-color-3), #42ff8e);
+}
+
+.counter-badge:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.token-tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    width: auto;
+    min-width: 600px;
+    max-width: 90vw; /* Usa hasta el 90% del ancho de la ventana */
+    max-height: 80vh; /* Mayor altura máxima para mostrar más contenido */
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+    padding: 20px;
+    z-index: 999;
+    overflow-y: hidden; /* Sin scroll vertical */
+    overflow-x: visible; /* Sin scroll horizontal */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.token-tooltip.active {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.token-tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--bg-card);
+}
+
+.token-tooltip-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+    margin-top: 5px;
+}
+
+.token-grid {
+    display: inline-flex;
+    flex-wrap: nowrap; /* No permite que los tokens pasen a la siguiente línea */
+    gap: 10px;
+    justify-content: flex-start; /* Alineación a la izquierda para mejor lectura */
+    width: max-content; /* Ancho ajustado al contenido */
+    padding-bottom: 15px;
+    margin-top: 15px;
+    padding-top: 10px;
+    overflow-x: visible; /* Sin scroll horizontal */
+}
+
+.token-chip {
+    background: linear-gradient(135deg, #333333, #222222);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: var(--text-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid #444;
+    min-width: 30px;
+    text-align: center;
+}
+
+.token-id {
+    font-size: 10px;
+    color: #fff;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    padding: 2px 5px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    font-weight: bold;
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+}
+
+textarea::placeholder {
+    color: #888888;
+}
+
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 30px var(--glow-color);
+    border-color: var(--accent-color);
+}
+
+/* Estilos para el contenedor de botones */
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Contenedor para los botones de toggle (GitHub y Llama) */
+.toggle-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+/* Estilos para el botón mágico */
+.magic-btn {
+    padding: 15px 35px;
+    background: linear-gradient(135deg, var(--magic-color-1), var(--magic-color-2));
+    background-size: 200% 200%;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
+    position: relative;
+    overflow: hidden;
+    animation: gradientShift 5s ease infinite;
+}
+
+/* Estilos base para los botones circulares (GitHub y Llama) */
+.github-btn, .llama-btn {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #333333, #222222);
+    background-size: 200% 200%;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+}
+
+/* Estilo específico para el botón de GitHub */
+.github-btn {
+    background: linear-gradient(135deg, #333333, #222222);
+}
+
+.github-btn .github-icon {
+    font-size: 24px;
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.github-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    opacity: 0.9;
+}
+
+/* Estilo específico para el botón de llama */
+.llama-btn {
+    background: linear-gradient(135deg, #ff9a00, #ff4e50);
+    background-size: 200% 200%;
+    box-shadow: 0 0 15px rgba(255, 154, 0, 0.2);
+    animation: gradientLlama 5s ease infinite;
+    opacity: 0.7;
+}
+
+.llama-btn:hover {
+    transform: translateY(-3px) rotate(10deg);
+    box-shadow: 0 5px 15px rgba(255, 154, 0, 0.4);
+    opacity: 0.9;
+}
+
+.llama-btn:active, .github-btn:active {
+    transform: translateY(0);
+}
+
+/* Estados activos de los botones */
+.github-btn.active {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #444444, #333333);
+}
+
+.llama-btn.active {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(255, 154, 0, 0.6);
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ffce00, #ff7b00);
+}
+
+.magic-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 25px rgba(255, 82, 82, 0.6);
+}
+
+.magic-btn:active {
+    transform: translateY(0);
+}
+
+.magic-btn .btn-text {
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.magic-wand {
+    font-size: 22px;
+    margin-left: 8px;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    opacity: 0;
+    transform: translate(20px, -10px) rotate(30deg);
+    transition: all 0.5s ease;
+}
+
+.magic-btn:hover .magic-wand {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+}
+
+.magic-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.magic-stars i {
+    position: absolute;
+    font-size: 12px;
+    color: white;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+.star-1 {
+    top: 20%;
+    left: 20%;
+}
+
+.star-2 {
+    top: 30%;
+    right: 25%;
+}
+
+.star-3 {
+    bottom: 30%;
+    left: 30%;
+}
+
+.magic-btn.casting .magic-stars i {
+    animation: starBurst 1.5s ease-out forwards;
+}
+
+@keyframes starBurst {
+    0% {
+        opacity: 0;
+        transform: scale(0) translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.5) translateY(-10px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0) translateY(-20px);
+    }
+}
+
+.magic-btn.casting .star-1 {
+    animation-delay: 0s;
+}
+
+.magic-btn.casting .star-2 {
+    animation-delay: 0.3s;
+}
+
+.magic-btn.casting .star-3 {
+    animation-delay: 0.6s;
+}
+
+/* Estilos para el botón de llama */
+.llama-btn {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff9a00, #ff4e50);
+    background-size: 200% 200%;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 154, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    animation: gradientLlama 5s ease infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.llama-btn:hover {
+    transform: translateY(-3px) rotate(10deg);
+    box-shadow: 0 5px 25px rgba(255, 154, 0, 0.6);
+}
+
+.llama-btn:active {
+    transform: translateY(0);
+}
+
+.llama-emoji {
+    font-size: 26px;
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes gradientLlama {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Animación de activación para el botón de llama */
+.llama-btn.active {
+    animation: llamaActive 0.5s ease forwards;
+    background: linear-gradient(135deg, #ffce00, #ff7b00);
+}
+
+@keyframes llamaActive {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2) rotate(15deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Efecto de brillo para la llama mágica */
+.llama-glow-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 154, 0, 0.08) 0%, transparent 70%);
+    z-index: 5;
+    pointer-events: none;
+    animation: llamaGlow 1s ease-out forwards;
+}
+
+@keyframes llamaGlow {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Efecto de brillo para GitHub */
+.github-glow-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+    z-index: 5;
+    pointer-events: none;
+    animation: githubGlow 1s ease-out forwards;
+}
+
+@keyframes githubGlow {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.response-container {
+    background-color: var(--secondary-color);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid #333;
+    position: relative;
+    overflow: hidden;
+}
+
+.response-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+    transform: rotate(45deg);
+    z-index: 0;
+}
+
+#responseBox {
+    min-height: 150px;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+#responseBox p {
+    margin-bottom: 20px;
+    color: #aaaaaa;
+    font-size: 16px;
+}
+
+.youtube-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.title-card {
+    background-color: var(--bg-card);
+    padding: 18px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.5;
+    border-left: 4px solid var(--primary-color);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.title-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px var(--glow-color);
+    background-color: #252525;
+}
+
+/* Aparición mágica de los títulos */
+@keyframes titleAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.title-card.appearing {
+    animation: titleAppear 0.5s ease-out forwards;
+}
+
+/* Estilo para el contenedor de respuestas */
+#responseContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 15px;
+    min-height: 200px;
+}
+
+.result-section {
+    background-color: var(--bg-card);
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 80px;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative; /* Asegurarse de que la posición sea relativa para posicionar el badge */
+    padding-bottom: 30px; /* Asegurar espacio para los badges */
+}
+
+.result-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px var(--glow-color);
+    background-color: #252525;
+}
+
+.result-section.empty {
+    background-color: rgba(30, 30, 30, 0.5);
+    color: #666;
+    justify-content: center;
+    align-items: center;
+    border-left: 4px solid #444;
+    white-space: nowrap; /* Evita saltos de línea */
+}
+
+.result-section.empty::before {
+    content: "✨ Esperando respuesta...";
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Animación de pulso para el texto de espera */
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+/* Nuevos estilos para los badges de modelo y tiempo */
+.model-badges {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 5;
+}
+
+.model-badge {
+    background: linear-gradient(135deg, var(--magic-color-1), var(--magic-color-2));
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    /* Estilo de bookmark */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-badge {
+    background: linear-gradient(135deg, var(--magic-color-3), var(--magic-color-2));
+    color: white;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    /* Estilo de bookmark */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo para el botón de retry */
+.retry-btn {
+    background: linear-gradient(135deg, #2196F3, #0d47a1);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.retry-btn:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 -3px 8px rgba(33, 150, 243, 0.4);
+}
+
+.retry-btn:active {
+    transform: translateY(0);
+}
+
+.retry-btn i {
+    font-size: 10px;
+}
+
+.time-badge i {
+    margin-right: 3px;
+    font-size: 8px;
+}
+
+.result-section:hover .model-badge,
+.result-section:hover .time-badge {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.result-content {
+    width: 100%;
+    overflow-y: auto;
+    max-height: 200px;
+    padding-right: 10px;
+    font-size: 15px;
+    color: #ddd;
+}
+
+/* Estilos para el mensaje toast de copiado */
+.toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    transform: none;
+    background: linear-gradient(135deg, var(--magic-color-1), var(--magic-color-2));
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 0 20px var(--glow-color);
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateX(0);
+}
+
+.toast-hidden {
+    opacity: 0;
+    transform: translateX(100px);
+}
+
+/* Animación del indicador de carga */
+.loading {
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.loading::before {
+    content: '✨';
+    font-size: 20px;
+    animation: spinStar 1.5s linear infinite;
+}
+
+@keyframes spinStar {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-dots:after {
+    content: '.';
+    animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: '.';
+    }
+    40% {
+        content: '..';
+    }
+    60% {
+        content: '...';
+    }
+    80%, 100% {
+        content: '';
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
+    }
+    
+    h1 {
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 16px;
+    }
+    
+    textarea {
+        height: 120px;
+        font-size: 16px;
+    }
+    
+    .magic-btn {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+    
+    .title-card {
+        font-size: 15px;
+        padding: 15px;
+    }
+    
+    .emoji-decoration {
+        font-size: 26px;
+    }
+    
+    .emoji-decoration.left {
+        left: -30px;
+    }
+    
+    .emoji-decoration.right {
+        right: -30px;
+    }
+    
+    #responseContainer {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+    }
+    
+    .model-badge {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+}
+
+/* Para pantallas muy pequeñas, ocultar los emojis */
+@media (max-width: 500px) {
+    .emoji-decoration {
+        display: none;
+    }
+}
