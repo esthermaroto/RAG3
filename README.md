@@ -6,7 +6,7 @@
 
 Este README contiene todo lo explicado en mi primer vídeo de esta serie, al que puedes acceder desde aquí:
 
-![Herramientas GRATIS para empezar a desarrollar con IA Generativa](https://github.com/user-attachments/assets/b1748e33-0c8b-4db5-adba-32887bd54ffc)
+[![Herramientas GRATIS para empezar a desarrollar con IA Generativa](https://github.com/user-attachments/assets/b1748e33-0c8b-4db5-adba-32887bd54ffc)](https://youtu.be/n28h_yXPeMg)
 
 ## ¿Qué es IA generativa?
 
