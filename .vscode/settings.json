@@ -1,0 +1,14 @@
+{
+    "prompty.modelConfigurations": [
+
+        {
+            "name": "llama3.1",
+            "type": "openai",
+            "api_key": "ollama",            
+            "base_url": "http://host.docker.internal:11434",
+            "azure_endpoint": "/v1/chat/completions",
+        }
+
+    ],
+    "prompty.currentModelConfiguration": "llama3.1"
+}

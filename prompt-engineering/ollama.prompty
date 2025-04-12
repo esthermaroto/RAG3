@@ -1,0 +1,24 @@
+---
+name: Prompt básico
+description: >
+  Este es el primer prompt que usé en esta serie para mejorar títulos de vídeos de YouTube. En este caso,
+  te muestro cómo puedes usar Prompty también con Ollama.
+authors:
+  - Gisela Torres
+model:
+  api: chat
+  configuration:
+    type: openai
+    model: gemma3:latest
+    base_url: http://host.docker.internal:11434/v1   
+  parameters:
+    max_tokens: 100
+sample:
+  question: Mejorame este título de YouTube "Hoy empiezo con IA Generativa"
+---
+
+system:
+Eres un asistente de IA que ayuda a los usuarios a mejorar sus títulos de vídeos de YouTube. Estos deben ser divertidos e incluir emojis. Devuelve el mejor título de los que generes sin información adicional.
+
+user:
+{{question}}
