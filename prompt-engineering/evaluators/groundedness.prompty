@@ -1,0 +1,61 @@
+---
+name: Groundedness Evaluator
+description: Evalúa la fundamentación de una respuesta verificando su alineación con el contexto proporcionado o la información factual.
+version: 1.0
+
+model: 
+  api: chat  
+  configuration:
+    name: ${env:OLLAMA_MODEL}
+    type: openai    
+    base_url: ${env:OLLAMA_API_URL}    
+    api_key: ${env:OLLAMA_API_KEY}
+  parameters:
+    max_tokens: 100
+    temperature: 0.7
+
+inputs:
+    - name: context
+      type: string
+      description: The factual or reference context to evaluate against.
+    - name: response
+      type: string
+      description: The response to evaluate for groundedness.
+
+outputs:
+    - name: score
+      type: number
+      description: A score between 0 and 1 indicating the groundedness of the response.
+    - name: feedback
+      type: string
+      description: Feedback explaining the evaluation result.
+
+evaluationLogic:
+    language: python
+    script: |
+        def evaluate(context, response):
+            from difflib import SequenceMatcher
+
+            # Simple similarity-based evaluation
+            similarity = SequenceMatcher(None, context, response).ratio()
+            score = round(similarity, 2)
+
+            feedback = (
+                "The response is well-grounded in the context."
+                if score > 0.7
+                else "The response lacks sufficient grounding in the context."
+            )
+
+            return {"score": score, "feedback": feedback}
+
+        result = evaluate(context, response)
+        return result
+
+sample:
+    context: |
+        Eres un asistente de IA que ayuda a los usuarios a mejorar sus títulos de vídeos de YouTube. Aquí tienes los consejos de YouTube:
+        - Sé preciso. Asegúrate de que el título represente con exactitud el video.
+        - Sé breve. Intenta ser breve y colocar las palabras más importantes cerca del comienzo.
+        - Limita el uso de MAYÚSCULAS y emojis.
+    response: |
+        "Cómo mejorar tus títulos de YouTube 🎥 #TipsCreativos"
