@@ -1,14 +1,35 @@
-{
-    "prompty.modelConfigurations": [
+// {
+//     "prompty.modelConfigurations": [       
 
-        {
-            "name": "llama3.1",
-            "type": "openai",
-            "api_key": "ollama",            
-            "base_url": "http://host.docker.internal:11434",
-            "azure_endpoint": "/v1/chat/completions",
-        }
+//         {
+//             "name": "llama3.1",
+//             "type": "openai",
+//             "api_key": "ollama",            
+//             "base_url": "http://host.docker.internal:11434",
+//             "model": "llama3.1",
+//         },
+//         {
+//             "name": "gemma3",
+//             "type": "openai",
+//             "api_key": "ollama",            
+//             "base_url": "http://host.docker.internal:11434",
+//             "model": "gemma3",
+//         },
+//         {
+//             "name": "mistral-nemo",
+//             "type": "openai",
+//             "api_key": "ollama",            
+//             "base_url": "http://host.docker.internal:11434",
+//             "model": "mistral-nemo",
+//         },
+//         {
+//             "name": "deepseek-r1",
+//             "type": "openai",
+//             "api_key": "ollama",            
+//             "base_url": "http://host.docker.internal:11434",
+//             "model": "deepseek-r1",
+//         }
 
-    ],
-    "prompty.currentModelConfiguration": "llama3.1"
-}
+//     ],
+//     "prompty.currentModelConfiguration": "gemma3"
+// }
