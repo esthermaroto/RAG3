@@ -1,6 +1,6 @@
 ---
-name: Friendliness Evaluator
-description: Friendliness Evaluator to measure warmth and approachability of answers.
+name: Friendliness (Amabilidad)
+description: Evaluar el tono y la calidez de la respuesta. Se mide qué tan amigable, empático y accesible es el modelo al interactuar con el usuario.
 model:
   api: chat
   configuration:

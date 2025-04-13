@@ -16,7 +16,7 @@ model:
     max_tokens: 100
     temperature: 0.7
 sample:
-  title: Capítulo 1 - Hoy empiezo con IA Generativa
+  title: 💡 Capítulo 1 Todo lo que necesitas para empezar a desarrollar apps con IA Generativa GRATIS  🧠✨
 ---
 
 system:

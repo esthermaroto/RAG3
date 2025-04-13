@@ -1,8 +1,8 @@
 ---
-name: Groundedness Evaluator
-description: Evalúa la fundamentación de una respuesta verificando su alineación con el contexto proporcionado o la información factual.
-version: 1.0
-
+name: Groundedness (Fundamentación)
+description: >
+  Objetivo: Determinar si la respuesta está basada en hechos verificables y si utiliza información confiable. Esto es crucial para evitar respuestas inventadas o incorrectas.
+  Ejemplo: Una respuesta que cita fuentes confiables o se basa en datos reales tiene una puntuación alta en fundamentación.
 model: 
   api: chat  
   configuration:
@@ -13,49 +13,54 @@ model:
   parameters:
     max_tokens: 100
     temperature: 0.7
-
 inputs:
-    - name: context
-      type: string
-      description: The factual or reference context to evaluate against.
-    - name: response
-      type: string
-      description: The response to evaluate for groundedness.
-
+  video_description:
+    type: string
+    description: Descripción del contenido del video.
+  generated_title:
+    type: string
+    description: Título generado para el video.
 outputs:
-    - name: score
-      type: number
-      description: A score between 0 and 1 indicating the groundedness of the response.
-    - name: feedback
-      type: string
-      description: Feedback explaining the evaluation result.
-
-evaluationLogic:
-    language: python
-    script: |
-        def evaluate(context, response):
-            from difflib import SequenceMatcher
-
-            # Simple similarity-based evaluation
-            similarity = SequenceMatcher(None, context, response).ratio()
-            score = round(similarity, 2)
-
-            feedback = (
-                "The response is well-grounded in the context."
-                if score > 0.7
-                else "The response lacks sufficient grounding in the context."
-            )
-
-            return {"score": score, "feedback": feedback}
-
-        result = evaluate(context, response)
-        return result
-
+  score:
+    type: int
+    description: Puntuación de fundamentación (1 a 5).
+  explanation:
+    type: string
+    description: Explicación de la puntuación asignada.
 sample:
-    context: |
-        Eres un asistente de IA que ayuda a los usuarios a mejorar sus títulos de vídeos de YouTube. Aquí tienes los consejos de YouTube:
-        - Sé preciso. Asegúrate de que el título represente con exactitud el video.
-        - Sé breve. Intenta ser breve y colocar las palabras más importantes cerca del comienzo.
-        - Limita el uso de MAYÚSCULAS y emojis.
-    response: |
-        "Cómo mejorar tus títulos de YouTube 🎥 #TipsCreativos"
+  video_description: >
+    Este video explica cómo empezar con la inteligencia artificial generativa, incluyendo ejemplos prácticos y herramientas recomendadas.
+  generated_title: >
+    "Cómo empezar con la IA generativa: Guía práctica"
+  output:
+    score: 5
+    explanation: >
+      El título es completamente fundamentado, ya que describe con precisión el contenido del video y utiliza términos relevantes y verificables.
+---
+
+system:
+Groundedness evaluates whether the generated YouTube title is based on verifiable facts and aligns with the content of the video. Rate the groundedness of the title on a scale from 1 to 5 using the following criteria:
+
+- **1 star:** El título es inventado o no tiene relación con el contenido del video.
+- **2 stars:** El título tiene algo de relación con el contenido, pero incluye errores significativos o es engañoso.
+- **3 stars:** El título es parcialmente correcto, pero carece de precisión o detalles verificables.
+- **4 stars:** El título es mayormente correcto y confiable, pero podría incluir más detalles verificables.
+- **5 stars:** El título es completamente correcto, confiable y describe con precisión el contenido del video.
+
+**Example 1**  
+video_description: "Tutorial sobre cómo usar Python para análisis de datos."  
+generated_title: "Aprende Python para análisis de datos."  
+output:  
+{"score": 5, "explanation": "El título es completamente fundamentado y describe con precisión el contenido del video."}
+
+**Example 2**  
+video_description: "Cómo optimizar tu canal de YouTube para obtener más vistas."  
+generated_title: "Cómo ganar dinero rápido con YouTube."  
+output:  
+{"score": 2, "explanation": "El título es engañoso y no refleja el contenido del video."}
+
+user:
+{{video_description}}
+{{generated_title}}
+output:
+

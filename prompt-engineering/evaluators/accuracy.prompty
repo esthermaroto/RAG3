@@ -1,0 +1,65 @@
+---
+name: Accuracy (Precisión)
+description: >
+    Objetivo: Determinar si la respuesta es correcta desde un punto de vista técnico o factual.
+    Ejemplo: Una respuesta que contiene datos correctos y bien fundamentados es precisa.
+model: 
+  api: chat  
+  configuration:
+    name: ${env:OLLAMA_MODEL}
+    type: openai    
+    base_url: ${env:OLLAMA_API_URL}    
+    api_key: ${env:OLLAMA_API_KEY}
+  parameters:
+    temperature: 0.3
+    response_format: { "type": "json" }
+inputs:
+  video_description:
+    type: string
+    description: Descripción del contenido del video.
+  generated_title:
+    type: string
+    description: Título generado para el video.
+outputs:
+  score:
+    type: int
+    description: Puntuación de precisión (1 a 5).
+  explanation:
+    type: string
+    description: Explicación de la puntuación asignada.
+sample:
+  video_description: >
+    Este video explica cómo empezar con la inteligencia artificial generativa, incluyendo ejemplos prácticos y herramientas recomendadas.
+  generated_title: >
+    "Cómo empezar con la IA generativa"
+  output:
+    score: 5
+    explanation: >
+      El título es completamente preciso, ya que describe correctamente el contenido del video y no incluye información incorrecta.
+---
+
+system:
+Accuracy evaluates whether the generated YouTube title is factually correct and aligns with the content of the video. Rate the accuracy of the title on a scale from 1 to 5 using the following criteria:
+
+- **1 star:** El título es incorrecto o engañoso.
+- **2 stars:** El título tiene algo de información correcta, pero incluye errores significativos.
+- **3 stars:** El título es moderadamente preciso, pero podría ser más exacto.
+- **4 stars:** El título es mayormente preciso, pero podría incluir más detalles correctos.
+- **5 stars:** El título es completamente preciso y describe correctamente el contenido del video.
+
+**Example 1**  
+video_description: "Tutorial sobre cómo usar Python para análisis de datos."  
+generated_title: "Aprende Python para análisis de datos."  
+output:  
+{"score": 5, "explanation": "El título es completamente preciso y describe correctamente el contenido del video."}
+
+**Example 2**  
+video_description: "Cómo optimizar tu canal de YouTube para obtener más vistas."  
+generated_title: "Cómo ganar dinero rápido con YouTube."  
+output:  
+{"score": 2, "explanation": "El título es engañoso y no refleja correctamente el contenido del video."}
+
+user:
+{{video_description}}
+{{generated_title}}
+output:
