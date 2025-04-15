@@ -9,9 +9,9 @@ model:
     name: ${env:OLLAMA_MODEL}
     type: openai    
     base_url: ${env:OLLAMA_API_URL}    
-    api_key: ${env:OLLAMA_API_KEY}
+    api_key: ${env:OLLAMA_API_KEY}    
   parameters:
-    temperature: 0.3
+    temperature: 0
     response_format: { "type": "json" }
 inputs:
   video_description:
@@ -46,6 +46,8 @@ Clarity evaluates whether the generated YouTube title is clear and easy to under
 - **3 stars:** El título es moderadamente claro, pero podría ser más comprensible.
 - **4 stars:** El título es mayormente claro y fácil de entender.
 - **5 stars:** El título es altamente claro, comprensible y utiliza un lenguaje sencillo.
+
+Also, provide an explanation with examples if necessary. The explanation should clarify why the title received the score it did, and if applicable, suggest improvements to enhance clarity.
 
 **Example 1**  
 video_description: "Tutorial sobre cómo usar Python para análisis de datos."  

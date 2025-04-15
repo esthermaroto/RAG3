@@ -1,35 +1,54 @@
-// {
-//     "prompty.modelConfigurations": [       
-
-//         {
-//             "name": "llama3.1",
-//             "type": "openai",
-//             "api_key": "ollama",            
-//             "base_url": "http://host.docker.internal:11434",
-//             "model": "llama3.1",
-//         },
-//         {
-//             "name": "gemma3",
-//             "type": "openai",
-//             "api_key": "ollama",            
-//             "base_url": "http://host.docker.internal:11434",
-//             "model": "gemma3",
-//         },
-//         {
-//             "name": "mistral-nemo",
-//             "type": "openai",
-//             "api_key": "ollama",            
-//             "base_url": "http://host.docker.internal:11434",
-//             "model": "mistral-nemo",
-//         },
-//         {
-//             "name": "deepseek-r1",
-//             "type": "openai",
-//             "api_key": "ollama",            
-//             "base_url": "http://host.docker.internal:11434",
-//             "model": "deepseek-r1",
-//         }
-
-//     ],
-//     "prompty.currentModelConfiguration": "gemma3"
-// }
+{
+    "prompty.modelConfigurations": [
+        {
+            "name": "qwen2.5",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1",
+            "model": "qwen2.5",
+        },
+        {
+            "name": "llama3.1",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1",
+            "model": "llama3.1",
+        },
+        {
+            "name": "phi4",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1",
+            "model": "phi4",
+        },
+        {
+            "name": "gemma3",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1",
+            "model": "gemma3",
+        },
+        {
+            "name": "mistral-nemo",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1",
+            "model": "mistral-nemo",
+        },
+        {
+            "name": "mistral-small3.1",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1",
+            "model": "mistral-small3.1",
+        },
+        {
+            "name": "deepseek-r1",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1",
+            "model": "deepseek-r1",
+        }
+    ],
+    "prompty.currentModelConfiguration": "mistral-small3.1"
+}

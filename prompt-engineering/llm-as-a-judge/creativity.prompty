@@ -6,12 +6,12 @@ description: >
 model: 
   api: chat  
   configuration:
-    name: ${env:OLLAMA_MODEL}
-    type: openai    
+    name: ${env:OLLAMA_MODEL}    
+    type: openai        
     base_url: ${env:OLLAMA_API_URL}    
     api_key: ${env:OLLAMA_API_KEY}
   parameters:
-    temperature: 0.8
+    temperature: 0.3
     response_format: { "type": "json" }
 inputs:
   video_description:

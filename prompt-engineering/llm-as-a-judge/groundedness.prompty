@@ -10,9 +10,8 @@ model:
     type: openai    
     base_url: ${env:OLLAMA_API_URL}    
     api_key: ${env:OLLAMA_API_KEY}
-  parameters:
-    max_tokens: 100
-    temperature: 0.7
+  parameters:    
+    temperature: 0
 inputs:
   video_description:
     type: string

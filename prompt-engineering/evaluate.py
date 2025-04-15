@@ -3,23 +3,27 @@ import sys
 from pathlib import Path
 from tabulate import tabulate
 import json
-import prompty
 from dotenv import load_dotenv
 import prompty.openai
-
+import time
+from rich import print
+from rich.table import Table
 
 load_dotenv()
 
 
-def run_evaluator(evaluator_path):
+def run_evaluator(evaluator_path, new_title, description):
     """
     Run a prompty evaluator and return the score and explanation.
     """
     try:
-
         # Run the evaluator using prompty as a library
         evaluator_file = str(evaluator_path)
-        result = prompty.execute(evaluator_file)
+
+        result = prompty.execute(evaluator_file,
+                                 inputs={
+                                     "generated_title": new_title, "video_description": description
+                                 })
 
         # Process the result based on type
         if isinstance(result, dict):
@@ -33,14 +37,12 @@ def run_evaluator(evaluator_path):
 
             # Try to find score in the output if it's a string
             if isinstance(result, str):
-                lines = result_str.strip().split('\n')
-                for line in lines:
-                    if line.lower().startswith('score:'):
-                        try:
-                            score = line.split(':', 1)[1].strip()
-                            break
-                        except IndexError:
-                            pass
+                try:
+                    parsed_result = json.loads(result)
+                    score = parsed_result.get('score', 'N/A')
+                    explanation = parsed_result.get('explanation', result_str)
+                except json.JSONDecodeError:
+                    pass
 
         return {
             'evaluator': evaluator_path.name,
@@ -57,14 +59,29 @@ def run_evaluator(evaluator_path):
 
 def main():
 
-    # Check if we have environments loaded
-    print("Environment variables loaded:")
-    print(f"OLLAMA_MODEL: {os.getenv('OLLAMA_MODEL')}")
-    print(f"OLLAMA_API_URL: {os.getenv('OLLAMA_API_URL')}")
-    print(f"OLLAMA_API_KEY: {os.getenv('OLLAMA_API_KEY')}")
+    description = "¡Hola developer! 👋🏻 Aquí tienes el segundo vídeo de mi serie sobre IA Generativa para developers. En él nos metemos de lleno en el código, trabajando con uno de los escenarios más comunes: la generación de texto ✍️. Te mostraré cómo llamar a diferentes modelos en modo stream y no-stream, utilizando SDKs como Mistral y OpenAI. Además, veremos una aplicación de ejemplo que te enseñará cómo integrar estos modelos en el frontend, visualizando los resultados que llegan desde una API conectada con GitHub Models y Ollama 🚀."
+
+    start_time = time.time()
+
+    print(
+        f"[bold blue]Model for title generation 📝[/bold blue]: {os.getenv('OLLAMA_MODEL_FOR_TEXT_GENERATION')}")
+
+    # Get the new title
+    new_title = prompty.execute(
+        Path.cwd() / "prompt-engineering/ollama.prompty",
+        inputs={"description": description}
+    )
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
+    print(f"Generated title ✨: {new_title}")
+    print(f"Title generation executed in {elapsed_time / 60:.2f} minutes 🕒.")
+
+    print(f"Evaluator using [bold green]{os.getenv('OLLAMA_MODEL')}[/bold green]")
 
     # Find the evaluators directory
-    evaluators_dir = Path.cwd() / 'prompt-engineering/evaluators'
+    evaluators_dir = Path.cwd() / 'prompt-engineering/llm-as-a-judge'
 
     if not evaluators_dir.exists() or not evaluators_dir.is_dir():
         print(f"Error: '{evaluators_dir}' directory not found.")
@@ -80,20 +97,44 @@ def main():
 
     print(f"Found {len(evaluator_files)} evaluators in '{evaluators_dir}'.")
 
+    # Track total elapsed time for all evaluators
+    total_elapsed_time = 0
+
     # Run each evaluator and collect results
     results = []
     for evaluator_file in evaluator_files:
         print(f"Running evaluator: {evaluator_file.name}")
-        result = run_evaluator(evaluator_file)
+        start_time = time.time()
+        result = run_evaluator(evaluator_file, new_title, description)
+        end_time = time.time()
+
+        elapsed_time = end_time - start_time
+        total_elapsed_time += elapsed_time
+
+        print(
+            f"Evaluator '{evaluator_file.name}' executed in {elapsed_time / 60:.2f} minutes 🕒")
         results.append(result)
 
-    # Display results in a table
-    headers = ['Evaluator', 'Score', 'Explanation']
-    table_data = [[result['evaluator'], result['score'],
-                   result['explanation']] for result in results]
 
-    print("\nEvaluation Results:")
-    print(tabulate(table_data, headers=headers, tablefmt='grid'))
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Evaluator", style="dim")
+    table.add_column("Score")
+    table.add_column("Explanation")
+
+    for result in results:
+        score = int(result['score']) if str(result['score']).isdigit() else 0
+        score_color = "green" if score == 5 else "yellow" if score in [3, 4] else "red"
+        table.add_row(
+            result['evaluator'],
+            f"[bold {score_color}]{result['score']}[/bold {score_color}]",
+            str(result['explanation'])
+        )
+    print(table)
+
+
+    # Display total elapsed time
+    print(
+        f"\nTotal time for all evaluations: {total_elapsed_time / 60:.2f} minutes 🕒")
 
 
 if __name__ == "__main__":
