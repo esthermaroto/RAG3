@@ -28,9 +28,9 @@ Por otro lado, vamos a ver también otros modelos, además de estos, usando Olla
 
 - `Llama 3.1`: Es un modelo desarrollado por Meta (Facebook), gratuito, soporta también hasta 128.000 tokens y soporta múltiples idiomas. No es multimodal.
 
-## SDKs y APIs
+## Ya tengo el modelo ¿ahora qué? APIs y SDKs
 
-Una vez que hayas elegido un modelo, necesitas averiguar cómo vas a interactuar con él. Afortunadamente, hay muchas opciones disponibles, desde SDKs hasta APIs. Algunos modelos vienen con su propio SDK, pero si no es el caso, puedes utilizar un SDK genérico como Hugging Face o OpenAI. Durante el vídeo verás que utilizo tanto el de Mistral como el de OpenAI como puedes ver en el directorio `no_streaming`.
+Una vez que hayas elegido un modelo, necesitas averiguar cómo vas a interactuar con él. Afortunadamente, hay muchas opciones disponibles, desde APIs hasta SDKs. Lo habitual es que trabajes con un SDK en lugar de llamar a la API REST directamente para que sea más sencillo. Algunos modelos vienen con su propio SDK, como el de Mistral, pero si no es el caso, puedes utilizar un SDK genérico como Hugging Face o OpenAI. Durante el vídeo verás que utilizo tanto el de Mistral como el de OpenAI como puedes ver en el directorio `no_streaming` y `with_streaming`
 
 ## Stream o no stream... That's the question!
 
