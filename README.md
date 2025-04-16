@@ -1,6 +1,17 @@
 # 🚀✨ Hoy empiezo con IA Generativa 🌟🤖
 
-¡Hola developer 👋🏻! Este repo contiene todo lo que necesitas para empezar a trabajar con IA generativa. Desde qué puedes usar para empezar gratis en tu máquina local, o en la nube, hasta ejemplos de los diferentes conceptos que necesitas aprender para poder usar IA generativa en tus proyectos. Pero todo ello desde el punto de vista del desarrollador, cómo realmente puedes integrar esto dentro de una aplicación que tú estés desarrollando, dejando a un lado las aplicaciones de terceros que circulan por la red. Este repo forma parte de mi serie sobre IA Generativa en mi canal de YouTube.
+¡Hola developer 👋🏻! Este repo contiene todo lo que necesitas para empezar a trabajar con IA generativa. Desde qué puedes usar para empezar gratis en tu máquina local, o en la nube, hasta ejemplos de los diferentes conceptos que necesitas aprender para poder usar IA generativa en tus proyectos. Pero todo ello desde el punto de vista del desarrollador, para que puedas ver cómo realmente puedes integrar esto dentro de una aplicación que tú estés desarrollando, dejando a un lado las aplicaciones de terceros que circulan por la red. Este repo forma parte de mi serie sobre IA Generativa en mi canal de YouTube.
+
+## 📚 Índice
+
+- [💡 Capítulo 1: Todo lo que necesitas para empezar a desarrollar apps con IA Generativa GRATIS 🧠✨](#-capítulo-1-todo-lo-que-necesitas-para-empezar-a-desarrollar-apps-con-ia-generativa-gratis-)
+- [📝 Capítulo 2: Introducción a la generación de texto con IA Generativa 📝🤖🪄✨ ](text-generation/README.md)
+
+## 💡 Capítulo 1: Todo lo que necesitas para empezar a desarrollar apps con IA Generativa GRATIS  🧠✨
+
+Este README contiene todo lo explicado en mi primer vídeo de esta serie, al que puedes acceder desde aquí:
+
+[![Herramientas GRATIS para empezar a desarrollar con IA Generativa](https://github.com/user-attachments/assets/b1748e33-0c8b-4db5-adba-32887bd54ffc)](https://youtu.be/n28h_yXPeMg)
 
 ## ¿Qué es IA generativa?
 
@@ -172,13 +183,7 @@ Este funciona de una forma similar a Ollama. Primero debes verificar que este lo
 ```bash
 docker model status
 ```
-
->[!Note]
-> Puedes usar estos comandos dentro del Dev Container porque he añadido una Feature que te permite apuntar al Docker del host.
-
-y debería de devolverte: `Docker Model Runner is running`
-
-Y puedes hacer lo mismo que hemos visto hasta ahora:
+y debería de devolverte: `Docker Model Runner is running`, y puedes hacer lo mismo que hemos visto hasta ahora:
 
 Descargarte modelos (para ello puedes ver [los modelos disponibles a día de hoy en Docker Hub](https://hub.docker.com/u/ai)):
 
@@ -283,3 +288,5 @@ curl -X POST "https://models.inference.ai.azure.com/chat/completions" \
 Y ya para terminar, si vas a utilizar Visual Studio Code como parte de tu entorno de desarrollo tienes una extensión disponible muy interesante que se llama AI Toolkit for Visual Studio, la cual te va a permitir interactuar de una forma bastante sencilla con los modelos tanto de Ollama como de Github Models (además de otras opciones que no hemos visto aquí). Esta extensión forma parte de este DevContainer.
 
 Puedo cargar directamente los modelos que ya he descargado de Ollama y ejecutarlos utilizando el Playground que ofrece.
+
+¡Nos vemos 👋🏻!
