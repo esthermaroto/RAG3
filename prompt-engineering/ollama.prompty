@@ -7,11 +7,11 @@ authors:
   - Gisela Torres
 model: 
   api: chat  
-  configuration:
-    name: ${env:OLLAMA_MODEL_FOR_TEXT_GENERATION}
-    type: openai    
-    base_url: ${env:OLLAMA_API_URL}    
-    api_key: ${env:OLLAMA_API_KEY}    
+  # configuration:
+  #   name: ${env:OLLAMA_MODEL_FOR_TEXT_GENERATION}
+  #   type: openai    
+  #   base_url: ${env:OLLAMA_API_URL}    
+  #   api_key: ${env:OLLAMA_API_KEY}
   parameters:
     max_tokens: 100
     temperature: 0.7

@@ -1,54 +1,61 @@
 {
     "prompty.modelConfigurations": [
-        {
+        {            
             "name": "qwen2.5",
             "type": "openai",
             "api_key": "ollama",
-            "base_url": "http://host.docker.internal:11434/v1",
-            "model": "qwen2.5",
+            "base_url": "http://host.docker.internal:11434/v1"
         },
         {
             "name": "llama3.1",
             "type": "openai",
             "api_key": "ollama",
-            "base_url": "http://host.docker.internal:11434/v1",
-            "model": "llama3.1",
+            "base_url": "http://host.docker.internal:11434/v1"            
         },
         {
             "name": "phi4",
             "type": "openai",
             "api_key": "ollama",
-            "base_url": "http://host.docker.internal:11434/v1",
-            "model": "phi4",
+            "base_url": "http://host.docker.internal:11434/v1"            
         },
         {
             "name": "gemma3",
             "type": "openai",
             "api_key": "ollama",
-            "base_url": "http://host.docker.internal:11434/v1",
-            "model": "gemma3",
+            "base_url": "http://host.docker.internal:11434/v1"            
         },
         {
             "name": "mistral-nemo",
             "type": "openai",
             "api_key": "ollama",
-            "base_url": "http://host.docker.internal:11434/v1",
-            "model": "mistral-nemo",
+            "base_url": "http://host.docker.internal:11434/v1"            
         },
         {
             "name": "mistral-small3.1",
             "type": "openai",
             "api_key": "ollama",
-            "base_url": "http://host.docker.internal:11434/v1",
-            "model": "mistral-small3.1",
+            "base_url": "http://host.docker.internal:11434/v1"            
         },
         {
             "name": "deepseek-r1",
             "type": "openai",
             "api_key": "ollama",
-            "base_url": "http://host.docker.internal:11434/v1",
-            "model": "deepseek-r1",
+            "base_url": "http://host.docker.internal:11434/v1"            
+        },
+        {
+            "name": "openai/gpt-4o",
+            "type": "openai",
+            "api_key": "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",
+            "base_url": "https://models.github.ai/inference",
+            
+        },
+        {
+            "name": "openai/gpt-4.1",
+            "type": "openai",
+            "api_key": "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",
+            "base_url": "https://models.github.ai/inference",
+            
         }
     ],
-    "prompty.currentModelConfiguration": "mistral-small3.1"
+    "prompty.currentModelConfiguration": "openai/gpt-4.1"
 }

@@ -23,6 +23,12 @@ def run_evaluator(evaluator_path, new_title, description):
         result = prompty.execute(evaluator_file,
                                  inputs={
                                      "generated_title": new_title, "video_description": description
+                                 },
+                                 configuration={
+                                     "name": os.getenv('OLLAMA_MODEL'),
+                                     "type": "openai",
+                                     "base_url": os.getenv('OLLAMA_API_URL'),
+                                     "api_key": os.getenv('OLLAMA_API_KEY')
                                  })
 
         # Process the result based on type
@@ -69,7 +75,13 @@ def main():
     # Get the new title
     new_title = prompty.execute(
         Path.cwd() / "prompt-engineering/ollama.prompty",
-        inputs={"description": description}
+        inputs={"description": description},
+        configuration={
+            "name": os.getenv('OLLAMA_MODEL_FOR_TEXT_GENERATION'),
+            "type": "openai",
+            "base_url": os.getenv('OLLAMA_API_URL'),
+            "api_key": os.getenv('OLLAMA_API_KEY')
+        }
     )
 
     end_time = time.time()
@@ -78,7 +90,8 @@ def main():
     print(f"Generated title ✨: {new_title}")
     print(f"Title generation executed in {elapsed_time / 60:.2f} minutes 🕒.")
 
-    print(f"Evaluator using [bold green]{os.getenv('OLLAMA_MODEL')}[/bold green]")
+    print(
+        f"Evaluator using [bold green]{os.getenv('OLLAMA_MODEL')}[/bold green]")
 
     # Find the evaluators directory
     evaluators_dir = Path.cwd() / 'prompt-engineering/llm-as-a-judge'
@@ -115,7 +128,6 @@ def main():
             f"Evaluator '{evaluator_file.name}' executed in {elapsed_time / 60:.2f} minutes 🕒")
         results.append(result)
 
-
     table = Table(show_header=True, header_style="bold magenta")
     table.add_column("Evaluator", style="dim")
     table.add_column("Score")
@@ -123,14 +135,14 @@ def main():
 
     for result in results:
         score = int(result['score']) if str(result['score']).isdigit() else 0
-        score_color = "green" if score == 5 else "yellow" if score in [3, 4] else "red"
+        score_color = "green" if score == 5 else "yellow" if score in [
+            3, 4] else "red"
         table.add_row(
             result['evaluator'],
             f"[bold {score_color}]{result['score']}[/bold {score_color}]",
             str(result['explanation'])
         )
     print(table)
-
 
     # Display total elapsed time
     print(
