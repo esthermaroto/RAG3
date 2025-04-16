@@ -2,6 +2,8 @@
 
 ¡Hola developer 👋🏻! En esta sección vas a poder aprender cómo trabajar con modelos de IA Generativa para pedirles que te ayuden a generar texto en base a uno que tú le pases. Además vamos aprovechar este capítulo para introducir algunos conceptos que son útiles cuando comienzas en este mundo. El vídeo relacionado con este contenido puedes encontrarlo en mi canal de YouTube:
 
+
+
 ## Introducción
 
 La generación de texto con IA es un campo de la inteligencia artificial que se centra en la creación de modelos que puedan generar texto de forma autónoma. Estos modelos se entrenan en grandes cantidades de texto y luego se les pide que generen texto en función de una entrada dada. La generación de texto con IA se utiliza en una amplia variedad de aplicaciones, como la generación de contenido para sitios web, la creación de diálogos para chatbots y la redacción de informes y artículos. Para mi ejemplo voy a tener como objetivo mejorar títulos de vídeos para mi canal de YouTube, de tal forma que puedas entender estos conceptos con un ejemplo práctico.

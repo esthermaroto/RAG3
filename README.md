@@ -2,6 +2,11 @@
 
 ¡Hola developer 👋🏻! Este repo contiene todo lo que necesitas para empezar a trabajar con IA generativa. Desde qué puedes usar para empezar gratis en tu máquina local, o en la nube, hasta ejemplos de los diferentes conceptos que necesitas aprender para poder usar IA generativa en tus proyectos. Pero todo ello desde el punto de vista del desarrollador, para que puedas ver cómo realmente puedes integrar esto dentro de una aplicación que tú estés desarrollando, dejando a un lado las aplicaciones de terceros que circulan por la red. Este repo forma parte de mi serie sobre IA Generativa en mi canal de YouTube.
 
+## 📚 Índice
+
+- [💡 Capítulo 1: Todo lo que necesitas para empezar a desarrollar apps con IA Generativa GRATIS 🧠✨](#-capítulo-1-todo-lo-que-necesitas-para-empezar-a-desarrollar-apps-con-ia-generativa-gratis-)
+- [📝 Capítulo 2: Introducción a la generación de texto con IA Generativa 📝🤖🪄✨ ](text-generation/README.md)
+
 ## 💡 Capítulo 1: Todo lo que necesitas para empezar a desarrollar apps con IA Generativa GRATIS  🧠✨
 
 Este README contiene todo lo explicado en mi primer vídeo de esta serie, al que puedes acceder desde aquí:
