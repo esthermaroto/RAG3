@@ -79,8 +79,6 @@ def generate():
                         
             except Exception as e:
                 yield f"Error using OpenAI SDK with Ollama: {str(e)}"
-            except Exception as e:
-                yield f"Error connecting to Ollama: {str(e)}"
 
         else:
             yield f"Unknown source: {source}\n"
