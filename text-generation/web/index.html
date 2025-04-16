@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Generador de Títulos para YouTube</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fab fa-youtube"></i> Generador Mágico de Títulos ✨</h1>
+            <p class="subtitle">✍️ Escribe tu título y la IA creará títulos virales para tu canal 🚀</p>
+        </div>
+        
+        <div class="input-container">
+            <div class="emoji-decoration left">🧠</div>
+            <div class="textarea-container">
+                <textarea id="userInput" placeholder="Describe el tema de tu video..."></textarea>
+                <div class="counters-container">
+                    <div id="token-counter" class="counter-badge" data-tooltip-content="">0 tokens</div>
+                    <div id="char-counter" class="counter-badge">0 caracteres</div>
+                    <div id="word-counter" class="counter-badge">0 palabras</div>
+                </div>
+                <div id="token-tooltip" class="token-tooltip"></div>
+            </div>
+            <div class="emoji-decoration right">💡</div>
+            <div class="buttons-container">
+                <button id="submitBtn" class="magic-btn">
+                    <span class="btn-text">✨ Haz magia ✨</span>
+                    <span class="magic-wand">🪄</span>
+                    <span class="magic-stars">
+                        <i class="fas fa-star star-1"></i>
+                        <i class="fas fa-star star-2"></i>
+                        <i class="fas fa-star star-3"></i>
+                    </span>
+                </button>
+                <div class="toggle-buttons">
+                    <button id="githubBtn" class="github-btn active" title="Usar GitHub">
+                        <span class="github-icon"><i class="fab fa-github"></i></span>
+                    </button>
+                    <button id="llamaBtn" class="llama-btn" title="Activar llama mágica">
+                        <span class="llama-emoji">🦙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="response-container">
+            <h2>🎥 Títulos Sugeridos</h2>
+            <div id="responseContainer">
+                <div class="result-section github-model ollama" id="mistral-nemo">
+                    <div class="result-content"></div>
+                    <div class="model-badges">
+                        <div class="model-badge">MISTRAL NEMO</div>
+                        <div class="time-badge"><i class="fas fa-clock"></i> <span class="time-value">--</span></div>
+                        <button class="retry-btn" title="Intentar de nuevo"><i class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
+                <div class="result-section github-model" id="gpt-4o">
+                    <div class="result-content"></div>
+                    <div class="model-badges">
+                        <div class="model-badge">GPT-4o</div>
+                        <div class="time-badge"><i class="fas fa-clock"></i> <span class="time-value">--</span></div>
+                        <button class="retry-btn" title="Intentar de nuevo"><i class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
+                <div class="result-section github-model ollama" id="phi-4">
+                    <div class="result-content"></div>
+                    <div class="model-badges">
+                        <div class="model-badge">Phi-4</div>
+                        <div class="time-badge"><i class="fas fa-clock"></i> <span class="time-value">--</span></div>
+                        <button class="retry-btn" title="Intentar de nuevo"><i class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
+                <div class="result-section github-model ollama" id="deepseek-r1">
+                    <div class="result-content"></div>
+                    <div class="model-badges">
+                        <div class="model-badge">DEEPSEEK R1</div>
+                        <div class="time-badge"><i class="fas fa-clock"></i> <span class="time-value">--</span></div>
+                        <button class="retry-btn" title="Intentar de nuevo"><i class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
+                <div class="result-section ollama" id="gemma3">
+                    <div class="result-content"></div>
+                    <div class="model-badges">
+                        <div class="model-badge">GEMMA 3</div>
+                        <div class="time-badge"><i class="fas fa-clock"></i> <span class="time-value">--</span></div>
+                        <button class="retry-btn" title="Intentar de nuevo"><i class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
+                <div class="result-section ollama" id="llama3.1">
+                    <div class="result-content"></div>
+                    <div class="model-badges">
+                        <div class="model-badge">LLAMA 3.1</div>
+                        <div class="time-badge"><i class="fas fa-clock"></i> <span class="time-value">--</span></div>
+                        <button class="retry-btn" title="Intentar de nuevo"><i class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="ui.js"></script>    
+    <script src="utils.js"></script>
+</body>
+</html>
