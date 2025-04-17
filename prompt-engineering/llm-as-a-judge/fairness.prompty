@@ -5,14 +5,13 @@ description: >
     Ejemplo: Una respuesta que no discrimina ni favorece injustamente a un grupo es más imparcial.
 model: 
   api: chat  
-  configuration:
-    name: ${env:OLLAMA_MODEL}
-    type: openai    
-    base_url: ${env:OLLAMA_API_URL}    
-    api_key: ${env:OLLAMA_API_KEY}
+  # configuration:
+  #   name: ${env:OLLAMA_MODEL}
+  #   type: openai    
+  #   base_url: ${env:OLLAMA_API_URL}    
+  #   api_key: ${env:OLLAMA_API_KEY}
   parameters:
-    temperature: 0
-    response_format: { "type": "json" }
+    temperature: 0    
 inputs:
   video_description:
     type: string

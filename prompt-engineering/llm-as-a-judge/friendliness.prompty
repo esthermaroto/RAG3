@@ -9,8 +9,7 @@ model:
     base_url: ${env:OLLAMA_API_URL}    
     api_key: ${env:OLLAMA_API_KEY}
   parameters:
-    temperature: 0
-    response_format: { "type": "json" }
+    temperature: 0    
 inputs:
   title:
     type: string

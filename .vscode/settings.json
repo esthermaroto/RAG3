@@ -55,7 +55,14 @@
             "api_key": "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",
             "base_url": "https://models.github.ai/inference",
             
+        },
+        {
+            "name": "meta/Llama-4-Maverick-17B-128E-Instruct-FP8",
+            "type": "openai",
+            "api_key": "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",
+            "base_url": "https://models.github.ai/inference",
+            
         }
     ],
-    "prompty.currentModelConfiguration": "openai/gpt-4.1"
+    "prompty.currentModelConfiguration": "meta/Llama-4-Maverick-17B-128E-Instruct-FP8"
 }

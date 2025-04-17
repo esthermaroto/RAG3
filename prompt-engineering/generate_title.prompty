@@ -14,7 +14,13 @@ model:
   #   api_key: ${env:OLLAMA_API_KEY}
   parameters:
     max_tokens: 100
-    temperature: 0.7
+    temperature: 0.8
+
+inputs:
+  description:
+    type: string
+    description: Descripción del contenido del vídeo.
+
 sample:
   description: >
     ¡Hola developer 👋🏻! Con este vídeo comienzo una nueva serie sobre cómo desarrollar funcionalidades para tus aplicaciones utilizando IA Generativa 🤖💡.
