@@ -186,10 +186,10 @@ function showToast(message) {
 
 // Map of model names to display names
 const modelNames = {
-    'mistral-nemo': 'Mistral Nemo',
-    'gpt-4o': 'GPT-4o',
-    'phi-4': 'Phi-4',
-    'deepseek-r1': 'DeepSeek R1',
+    'mistral-ai/Mistral-Nemo': 'Mistral Nemo',
+    'openai/gpt-4o': 'GPT-4o',
+    'microsoft/Phi-4': 'Phi-4',
+    'deepseek/DeepSeek-R1': 'DeepSeek R1',
     'gemma3': 'Gemma 3',
     'llama3.1': 'Llama 3.1'
 };
