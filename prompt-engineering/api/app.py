@@ -21,7 +21,7 @@ def create_openai_client(source):
             api_key=os.getenv("GITHUB_TOKEN"),
         )
     elif source == 'ollama':
-        ollama_url = os.getenv("OLLAMA_URL", "http://host.docker.internal:11434")
+        ollama_url = os.getenv("OLLAMA_URL")
         return OpenAI(
             base_url=f"{ollama_url}/v1",
             api_key="ollama",  # Ollama doesn't require a real API key, but one is needed for the SDK
