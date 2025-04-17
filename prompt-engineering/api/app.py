@@ -4,6 +4,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import tiktoken
+import prompty.openai
 
 # Load environment variables from a .env file
 load_dotenv()

@@ -18,5 +18,8 @@
 	"hostRequirements": {
 		"memory": "16gb",
 		"cpus": 4
+	},
+	{
+		"postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt"
 	}
 }

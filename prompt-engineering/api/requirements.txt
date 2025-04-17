@@ -5,3 +5,4 @@ mistralai==1.6.0
 openai==1.70.0
 requests==2.31.0
 tiktoken==0.9.0
+prompty==0.1.50
