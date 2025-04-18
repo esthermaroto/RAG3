@@ -72,11 +72,11 @@ userInput.addEventListener('input', (e) => {
 // Object to store the start times of each stream
 const startTimes = {};
 
-// Call the API to generate content for a given model and title
-const generateStream = async (model_name, title) => {
+// Call the API to generate content for a given model and description
+const generateStream = async (model_name, description) => {
 
     // Add the source parameter to the API call
-    const response = await fetch(`${API_URL}/generate?model=${model_name}&title=${title}&source=${activeSource}`);
+    const response = await fetch(`${API_URL}/generate?model=${model_name}&description=${description}&source=${activeSource}`);
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
 
@@ -121,9 +121,9 @@ const generateStream = async (model_name, title) => {
 
 // Handle form submission
 submitBtn.addEventListener('click', async () => {
-    const title = userInput.value.trim();
+    const description = userInput.value.trim();
 
-    if (title === '') {
+    if (description === '') {
         alert('Por favor escribe un tema para los títulos');
         return;
     }
@@ -158,13 +158,13 @@ submitBtn.addEventListener('click', async () => {
             // For GitHub models, run in parallel (existing behavior)
             for (const modelId of activeModels) {
                 console.log('Generating stream for', modelId);
-                generateStream(modelId, title);
+                generateStream(modelId, description);
             }
         } else {
             // For Ollama models, run sequentially
             const runSequentially = async () => {
                 for (const modelId of activeModels) {
-                    await generateStream(modelId, title);
+                    await generateStream(modelId, description);
                 }
             };
             await runSequentially();
@@ -207,9 +207,9 @@ document.querySelectorAll('.retry-btn').forEach(button => {
 
         // Obtener el ID del modelo (el id del elemento padre)
         const modelId = button.closest('.result-section').id;
-        const title = userInput.value.trim();
+        const description = userInput.value.trim();
 
-        if (title === '') {
+        if (description === '') {
             alert('Por favor escribe un tema para los títulos');
             return;
         }
@@ -230,7 +230,7 @@ document.querySelectorAll('.retry-btn').forEach(button => {
 
         // Generar contenido solo para este modelo
         try {
-            await generateStream(modelId, title);
+            await generateStream(modelId, description);
         } catch (error) {
             console.error(`Error al reintentar con ${modelId}:`, error);
             if (contentEl) {

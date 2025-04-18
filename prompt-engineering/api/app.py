@@ -4,7 +4,6 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import tiktoken
-import prompty.openai
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -39,12 +38,12 @@ def process_stream_response(stream_response):
 @app.route("/generate")
 def generate():
     model_name = request.args.get('model')
-    title = request.args.get('title')    
+    description = request.args.get('description')
     source = request.args.get('source')
 
     print(f"Source: {source}")
     print(f"Model: {model_name}")
-    print(f"Title: {title}")
+    print(f"Title: {description}")
 
     def generate_stream():
         if source not in ['github', 'ollama']:
@@ -56,17 +55,39 @@ def generate():
             if not client:
                 yield f"Failed to create client for source: {source}"
                 return
-                
+
+            instructions = (
+                "Eres un asistente de IA que ayuda a los usuarios a mejorar sus títulos de vídeos de YouTube. "
+                "Aquí tienes los consejos de YouTube:\n\n"
+                "## Cómo redactar títulos\n\n"
+                "Sé preciso. Asegúrate de que el título represente con exactitud el video. De lo contrario, puede que los usuarios dejen de mirarlo, "
+                "lo que puede afectar la visibilidad.\n"
+                "Sé breve. Es posible que los usuarios solo vean una parte del título. Por eso, intenta ser breve y colocar las palabras más "
+                "importantes cerca del comienzo. Deja los números de episodio y el desarrollo de la marca para el final.\n"
+                "Limita el uso de MAYÚSCULAS y emojis. Usa estos recursos con cuidado para enfatizar emociones o elementos especiales en el video. "
+                "Por ejemplo, \"Nuestros HIJOS construyeron UN ROBOT 🤖\".\n"
+                "Los títulos NO DEBEN execederse entre 40 y 70 caracteres, por lo que debes asegurarte que la suma de caracteres del resultado "
+                "no sean más de 70. YouTube solo acepta 100 caracteres. Si el título es demasiado largo, es posible que no se muestre completo "
+                "en los resultados de búsqueda o en las vistas previas de los videos.\n\n"
+                "### Tipos de títulos de videos\n"
+                "Puedes atraer al público con los siguientes recursos:\n\n"
+                "- Títulos que se pueden buscar y que describen claramente lo que se puede esperar del video para llegar fácilmente a los usuarios "
+                "que buscan contenido similar.\n"
+                "- Títulos interesantes que despiertan la curiosidad y atraen a los usuarios que no buscan contenido específico sobre un tema.\n\n"
+                "Devuelve solo un título mejorado, incluye emojis, hashtag pero no des explicaciones. No incluyas el nombre del canal ni la fecha de publicación."
+            )
+
             stream_response = client.chat.completions.create(
                 messages=[
-                    {"role": "user", "content": f"Mejorame el siguiente titulo, incluye emojis: '{title}'"}
+                    {"role": "system", "content": instructions},
+                    {"role": "user", "content": f"{description}"},
                 ],
                 model=model_name,
                 stream=True
             )
-            
+
             yield from process_stream_response(stream_response)
-                
+
         except Exception as e:
             yield f"Error using OpenAI SDK with {source}: {str(e)}"
 
