@@ -43,7 +43,7 @@ def generate():
 
     print(f"Source: {source}")
     print(f"Model: {model_name}")
-    print(f"Title: {description}")
+    print(f"Description: {description}")
 
     def generate_stream():
         if source not in ['github', 'ollama']:
