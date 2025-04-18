@@ -197,6 +197,12 @@ const modelNames = {
 // Mark all result sections as empty initially
 resultSections.forEach(section => {
     section.classList.add('empty');
+    
+    // Initialize the thinking indicator (ensure it's not active)
+    const thinkingIndicator = section.querySelector('.thinking-indicator');
+    if (thinkingIndicator) {
+        thinkingIndicator.classList.remove('active');
+    }
 });
 
 // Call updateResultSectionsVisibility on initial load to set correct visibility

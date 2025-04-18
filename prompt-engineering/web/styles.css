@@ -921,6 +921,39 @@ textarea:focus {
     }
 }
 
+/* Estilos para el indicador de "pensando" */
+.thinking-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.thinking-indicator.active {
+    opacity: 1;
+    filter: none;
+    animation: thinking-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes thinking-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 20px 15px;

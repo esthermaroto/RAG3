@@ -91,15 +91,32 @@ const generateStream = async (model_name, description) => {
     const resultContent = resultSection.querySelector('.result-content');
     resultContent.innerHTML = ''; // Clear previous content
 
+    // Get the thinking indicator
+    const thinkingIndicator = resultSection.querySelector('.thinking-indicator');
+    
+    // Ensure the thinking indicator is not active initially
+    if (thinkingIndicator) {
+        thinkingIndicator.classList.remove('active');
+    }
+
     // Ensure the time element shows "Processing..."
     const timeElement = resultSection.querySelector('.time-value');
     if (timeElement) {
         timeElement.textContent = 'Procesando...';
     }
-
+    
+    // Buffer to hold all text
+    let buffer = '';
+    
     while (true) {
         const { done, value } = await reader.read();
         if (done) {
+            // Process any remaining buffer text
+            const processedText = processBufferForDisplay(buffer, thinkingIndicator);
+            if (processedText) {
+                resultContent.innerHTML += processedText;
+            }
+            
             // Record the end time and calculate the response time
             const endTime = performance.now();
             const responseTime = ((endTime - startTimes[model_name]) / 1000).toFixed(2);
@@ -108,16 +125,105 @@ const generateStream = async (model_name, description) => {
             if (timeElement) {
                 timeElement.textContent = `${responseTime} segundos`;
             }
+            
+            // Ensure the thinking indicator is turned off when done
+            if (thinkingIndicator) {
+                thinkingIndicator.classList.remove('active');
+            }
             break;
         }
 
         const chunk = decoder.decode(value, { stream: true });
         console.log(chunk); // Log the chunk to the console
-
-        // Append the chunk to the result content
-        resultContent.innerHTML += chunk;
+        
+        // Add chunk to buffer
+        buffer += chunk;
+        
+        // Process buffer for display and get remaining text that may contain incomplete tags
+        const processedText = processBufferForDisplay(buffer, thinkingIndicator);
+        buffer = getRemainingBuffer(buffer);
+        
+        // Show processed text if there's any
+        if (processedText) {
+            resultContent.innerHTML += processedText;
+        }
     }
 };
+
+// Helper function to process buffer and extract displayable text
+function processBufferForDisplay(buffer, thinkingIndicator) {
+    let result = '';
+    let currentPos = 0;
+    
+    while (true) {
+        // Find the next <think> tag
+        const thinkStartPos = buffer.indexOf('<think>', currentPos);
+        
+        if (thinkStartPos === -1) {
+            // No more <think> tags, add the rest of text from current position
+            // but only up to the last completed tag or segment
+            result += buffer.substring(currentPos);
+            break;
+        }
+        
+        // Add text before the <think> tag
+        result += buffer.substring(currentPos, thinkStartPos);
+        
+        // Find the closing </think> tag
+        const thinkEndPos = buffer.indexOf('</think>', thinkStartPos);
+        
+        if (thinkEndPos === -1) {
+            // No closing tag yet, activate thinking indicator
+            if (thinkingIndicator) {
+                thinkingIndicator.classList.add('active');
+            }
+            
+            // Return what we've processed so far (before the <think> tag)
+            return result;
+        }
+        
+        // Found both opening and closing tags
+        if (thinkingIndicator) {
+            thinkingIndicator.classList.remove('active');
+        }
+        
+        // Skip the content between tags and continue from after </think>
+        currentPos = thinkEndPos + '</think>'.length;
+    }
+    
+    return result;
+}
+
+// Helper function to get the remaining buffer after processing
+function getRemainingBuffer(buffer) {
+    // Find the last complete closing tag
+    const lastCompleteClosePos = buffer.lastIndexOf('</think>');
+    
+    if (lastCompleteClosePos === -1) {
+        // No complete closing tags, check for opening tags
+        const lastOpenPos = buffer.lastIndexOf('<think>');
+        
+        if (lastOpenPos === -1) {
+            // No opening tags either, buffer is complete
+            return '';
+        } else {
+            // There's an opening tag without closing, keep from that position
+            return buffer.substring(lastOpenPos);
+        }
+    } else {
+        // Found a complete closing tag, check if there are more opening tags after it
+        const afterLastClose = buffer.substring(lastCompleteClosePos + '</think>'.length);
+        const openPosAfterClose = afterLastClose.indexOf('<think>');
+        
+        if (openPosAfterClose === -1) {
+            // No more opening tags after last close
+            return '';
+        } else {
+            // There's another opening tag after closing, keep from that position
+            return buffer.substring(lastCompleteClosePos + '</think>'.length + openPosAfterClose);
+        }
+    }
+}
 
 // Handle form submission
 submitBtn.addEventListener('click', async () => {
