@@ -131,6 +131,19 @@ userInput.addEventListener('input', (e) => {
 // Object to store the start times of each stream
 const startTimes = {};
 
+// Function to count characters for a model result
+const countResultChars = (text, resultSection) => {
+    // Trim whitespace from the text to remove any leading/trailing spaces
+    const trimmedText = text.trim();
+    
+    const count = trimmedText.length;
+    const charCountEl = resultSection.querySelector('.char-count-value');
+    if (charCountEl) {
+        charCountEl.textContent = `${count} caracteres`;
+    }
+    return count;
+};
+
 // Call the API to generate content for a given model and description
 const generateStream = async (model_name, description) => {
 
@@ -173,9 +186,16 @@ const generateStream = async (model_name, description) => {
     if (timeElement) {
         timeElement.textContent = 'Procesando...';
     }
+
+    // Reset character count
+    const charCountElement = resultSection.querySelector('.char-count-value');
+    if (charCountElement) {
+        charCountElement.textContent = '0 caracteres';
+    }
     
     // Buffer to hold all text
     let buffer = '';
+    let fullContent = ''; // Track the full content for character counting
     
     while (true) {
         const { done, value } = await reader.read();
@@ -184,6 +204,7 @@ const generateStream = async (model_name, description) => {
             const processedText = processBufferForDisplay(buffer, thinkingIndicator);
             if (processedText) {
                 resultContent.innerHTML += processedText;
+                fullContent += processedText; // Add to full content
             }
             
             // Record the end time and calculate the response time
@@ -194,6 +215,9 @@ const generateStream = async (model_name, description) => {
             if (timeElement) {
                 timeElement.textContent = `${responseTime} segundos`;
             }
+            
+            // Update character count
+            countResultChars(fullContent, resultSection);
             
             // Do NOT turn off the thinking indicator when done
             // The thinking indicator should remain active if thinking content exists
@@ -215,6 +239,10 @@ const generateStream = async (model_name, description) => {
         // Show processed text if there's any
         if (processedText) {
             resultContent.innerHTML += processedText;
+            fullContent += processedText; // Add to full content for character counting
+            
+            // Update character count as content is streamed
+            countResultChars(fullContent, resultSection);
         }
     }
 };
