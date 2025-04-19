@@ -47,9 +47,24 @@ def generate():
     print(f"Description: {description}")
 
     def generate_stream():
+
+        print(f"Source for generation: {source}")
+
         if source not in ['github', 'ollama']:
             yield f"Unknown source: {source}\n"
             return
+
+        # if source if ollama, we need to remove the prefix
+        ollama_model_name = ''
+        if source == 'ollama':
+            print("Using Ollama")           
+            ollama_model_name = model_name.split("/")[-1]
+
+            if ollama_model_name == "Phi-4":
+                ollama_model_name = "phi4"
+
+            print(f"Model name for Ollama: {ollama_model_name}")           
+
 
         try:
             client = create_openai_client(source)
@@ -58,8 +73,7 @@ def generate():
                 return
             
 
-            max_tokens = 100
-           
+
 
             instructions = (
                 "Eres un asistente de IA que ayuda a los usuarios a mejorar sus títulos de vídeos de YouTube. "
@@ -87,15 +101,28 @@ def generate():
                 "messages": [
                     {"role": "system", "content": instructions},
                     {"role": "user", "content": f"{description}"},
-                ],
-                "model": model_name,
+                ],                
                 "stream": True,
                 "temperature": 0.8,
             }
+
+            if source == 'ollama':
+                params["model"] = ollama_model_name                
+            else:
+                params["model"] = model_name
+                
+
+            # Count how many tokens we are using that include the instructions and the description
+            encoding = tiktoken.get_encoding("cl100k_base")
+            tokens = encoding.encode(instructions + description)
+            token_count = len(tokens)
+
+            print(f"Tokens used: {token_count}")
+
             
             # Only add max_tokens parameter for specific models
-            if model_name != "deepseek/DeepSeek-R1":
-                params["max_tokens"] = max_tokens
+            # if model_name != "deepseek/DeepSeek-R1":
+            #     params["max_tokens"] = max_tokens
             
             stream_response = client.chat.completions.create(**params)
 

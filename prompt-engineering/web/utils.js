@@ -60,9 +60,12 @@ function setupThinkingIndicators() {
                 console.log("Model ID:", modelId, "Content:", thinkingContent[modelId]);
                 if (modelId && thinkingContent[modelId]) {
                     const popupBody = document.querySelector('.thinking-popup-body');
-                    if (popupBody) {
+                    const thinkingPopup = document.getElementById('thinking-popup');
+                    if (popupBody && thinkingPopup) {
                         popupBody.innerHTML = `<pre>${thinkingContent[modelId]}</pre>`;
-                        document.getElementById('thinking-popup').classList.add('active');
+                        // Store current model ID in the popup
+                        thinkingPopup.setAttribute('data-current-model', modelId);
+                        thinkingPopup.classList.add('active');
                     }
                 }
             }
@@ -328,10 +331,15 @@ function updateThinkingPopupIfActive(modelId) {
     const popupBody = thinkingPopup?.querySelector('.thinking-popup-body');
     
     if (thinkingPopup?.classList.contains('active') && popupBody) {
-        const activeModelId = document.querySelector('.thinking-indicator.active')?.getAttribute('data-model-id');
+        // Get the current active model ID from the popup, not from indicators
+        // This ensures we update the currently displayed model's thinking content
+        const currentlyDisplayedModel = thinkingPopup.getAttribute('data-current-model');
         
-        if (activeModelId === modelId && thinkingContent[modelId]) {
+        // If the popup is showing content for this model, update it
+        if ((currentlyDisplayedModel === modelId || !currentlyDisplayedModel) && thinkingContent[modelId]) {
             popupBody.innerHTML = `<pre>${thinkingContent[modelId]}</pre>`;
+            // Store which model is currently being displayed
+            thinkingPopup.setAttribute('data-current-model', modelId);
         }
     }
 }
