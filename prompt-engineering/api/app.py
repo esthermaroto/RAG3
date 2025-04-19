@@ -56,6 +56,10 @@ def generate():
             if not client:
                 yield f"Failed to create client for source: {source}"
                 return
+            
+
+            max_tokens = 100
+           
 
             instructions = (
                 "Eres un asistente de IA que ayuda a los usuarios a mejorar sus títulos de vídeos de YouTube. "
@@ -78,14 +82,22 @@ def generate():
                 "Devuelve solo un título mejorado, incluye emojis, hashtag pero no des explicaciones. No incluyas el nombre del canal ni la fecha de publicación."
             )
 
-            stream_response = client.chat.completions.create(
-                messages=[
+            # Prepare the parameters for the API call
+            params = {
+                "messages": [
                     {"role": "system", "content": instructions},
                     {"role": "user", "content": f"{description}"},
                 ],
-                model=model_name,
-                stream=True
-            )
+                "model": model_name,
+                "stream": True,
+                "temperature": 0.8,
+            }
+            
+            # Only add max_tokens parameter for specific models
+            if model_name != "deepseek/DeepSeek-R1":
+                params["max_tokens"] = max_tokens
+            
+            stream_response = client.chat.completions.create(**params)
 
             yield from process_stream_response(stream_response)
 

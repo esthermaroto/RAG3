@@ -41,3 +41,5 @@ Por ejemplo, en lugar de decir "Mejora este título usando un lenguaje técnico"
 Referencias:
 - [Prompt Engineering](https://www.promptengineering.org/)
 - [Prompt Engineering Guide](https://www.promptingguide.ai/)
+
+## Ejecutar Ollama con más 
