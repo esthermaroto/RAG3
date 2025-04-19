@@ -10,10 +10,10 @@ const charCounter = document.getElementById('char-counter');
 const wordCounter = document.getElementById('word-counter');
 const tokenTooltip = document.getElementById('token-tooltip');
 
-// Objeto para almacenar el contenido de thinking para cada modelo
+// Object to store the thinking content for each model
 const thinkingContent = {};
 
-// Crear el elemento del popup si no existe
+// Create thinking popup if it doesn't exist
 let thinkingPopup = document.getElementById('thinking-popup');
 if (!thinkingPopup) {
     thinkingPopup = document.createElement('div');
@@ -30,13 +30,13 @@ if (!thinkingPopup) {
     `;
     document.body.appendChild(thinkingPopup);
 
-    // Agregar evento para cerrar el popup cuando se hace clic en la X
+    // Add event listener to close button
     const closeBtn = thinkingPopup.querySelector('.thinking-popup-close');
     closeBtn.addEventListener('click', () => {
         thinkingPopup.classList.remove('active');
     });
 
-    // Cerrar el popup si se hace clic fuera de su contenido
+    // Close the popup if clicked outside its content
     thinkingPopup.addEventListener('click', (event) => {
         if (event.target === thinkingPopup) {
             thinkingPopup.classList.remove('active');
@@ -44,16 +44,16 @@ if (!thinkingPopup) {
     });
 }
 
-// Agregar listener a todas las bombillas después de que se cargue el DOM
+// Add event listener to all lightbulb icons
 document.addEventListener('DOMContentLoaded', () => {
     setupThinkingIndicators();
 });
 
-// Inicializar eventos para los indicadores de thinking
+// Initialize all lightbulb icons
 function setupThinkingIndicators() {
     document.querySelectorAll('.thinking-indicator').forEach(indicator => {
         indicator.addEventListener('click', (event) => {
-            event.stopPropagation(); // Evitar que el clic se propague
+            event.stopPropagation(); // Avoid event bubbling
             console.log("Clic en thinking indicator", indicator.classList.contains('active'));
             if (indicator.classList.contains('active')) {
                 const modelId = indicator.closest('.result-section')?.id;
@@ -134,8 +134,18 @@ const startTimes = {};
 // Call the API to generate content for a given model and description
 const generateStream = async (model_name, description) => {
 
-    // Add the source parameter to the API call
-    const response = await fetch(`${API_URL}/generate?model=${model_name}&description=${description}&source=${activeSource}`);
+    // Add the source parameter to the API call and use POST method
+    const response = await fetch(`${API_URL}/generate`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: model_name,
+            description: description,
+            source: activeSource
+        })
+    });
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
 
@@ -185,10 +195,10 @@ const generateStream = async (model_name, description) => {
                 timeElement.textContent = `${responseTime} segundos`;
             }
             
-            // Ensure the thinking indicator is turned off when done
-            if (thinkingIndicator) {
-                thinkingIndicator.classList.remove('active');
-            }
+            // Do NOT turn off the thinking indicator when done
+            // The thinking indicator should remain active if thinking content exists
+            // This has been removed: thinkingIndicator.classList.remove('active');
+            
             break;
         }
 
@@ -214,7 +224,7 @@ function processBufferForDisplay(buffer, thinkingIndicator) {
     let result = '';
     let currentPos = 0;
     
-    // Obtener el ID del modelo desde el indicador de pensamiento
+    // Get model ID from the thinking indicator if it exists
     let modelId = null;
     if (thinkingIndicator) {
         const resultSection = thinkingIndicator.closest('.result-section');
@@ -241,14 +251,15 @@ function processBufferForDisplay(buffer, thinkingIndicator) {
         
         if (thinkEndPos === -1) {
             // No closing tag yet, activate thinking indicator
-            if (thinkingIndicator) {
+            if (thinkingIndicator && modelId) {
                 thinkingIndicator.classList.add('active');
                 
-                // Si hay contenido parcial de thinking, lo guardamos temporalmente
+                // If there is thinking content, store it for later and update the popup if it's active
                 const partialThinking = buffer.substring(thinkStartPos + '<think>'.length);
-                if (modelId) {
-                    thinkingContent[modelId] = partialThinking;
-                }
+                thinkingContent[modelId] = partialThinking;
+                
+                // Update the popup content if it's currently being displayed
+                updateThinkingPopupIfActive(modelId);
             }
             
             // Return what we've processed so far (before the <think> tag)
@@ -261,14 +272,19 @@ function processBufferForDisplay(buffer, thinkingIndicator) {
         // Store the thinking content with the model ID
         if (modelId) {
             thinkingContent[modelId] = thinking;
+            
+            // Update the popup content if it's currently being displayed
+            updateThinkingPopupIfActive(modelId);
         }
         
         // Activate the thinking indicator and make it clickable
         if (thinkingIndicator) {
             thinkingIndicator.classList.add('active');
             thinkingIndicator.style.cursor = 'pointer';
-            // Asegurar que tenga un atributo data-model-id
             thinkingIndicator.setAttribute('data-model-id', modelId);
+            
+            // Never turn off the thinking indicator once activated
+            // This ensures the user can view the thinking content even after processing is done
         }
         
         // Skip the content between tags and continue from after </think>
@@ -276,6 +292,20 @@ function processBufferForDisplay(buffer, thinkingIndicator) {
     }
     
     return result;
+}
+
+// Helper function to update the thinking popup if it's currently active
+function updateThinkingPopupIfActive(modelId) {
+    const thinkingPopup = document.getElementById('thinking-popup');
+    const popupBody = thinkingPopup?.querySelector('.thinking-popup-body');
+    
+    if (thinkingPopup?.classList.contains('active') && popupBody) {
+        const activeModelId = document.querySelector('.thinking-indicator.active')?.getAttribute('data-model-id');
+        
+        if (activeModelId === modelId && thinkingContent[modelId]) {
+            popupBody.innerHTML = `<pre>${thinkingContent[modelId]}</pre>`;
+        }
+    }
 }
 
 // Helper function to get the remaining buffer after processing

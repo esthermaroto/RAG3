@@ -9,7 +9,7 @@ import tiktoken
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:5500"}})
 
 
 def create_openai_client(source):
@@ -35,11 +35,12 @@ def process_stream_response(stream_response):
             yield chunk.choices[0].delta.content
 
 
-@app.route("/generate")
+@app.route("/generate", methods=["POST"])
 def generate():
-    model_name = request.args.get('model')
-    description = request.args.get('description')
-    source = request.args.get('source')
+    data = request.json
+    model_name = data.get('model')
+    description = data.get('description')
+    source = data.get('source')
 
     print(f"Source: {source}")
     print(f"Model: {model_name}")

@@ -974,12 +974,14 @@ textarea:focus {
     background: var(--bg-card);
     width: 90%;
     max-width: 800px;
-    max-height: 80vh;
+    height: 80vh; /* Altura fija más alta */
     border-radius: 12px;
     box-shadow: 0 0 25px rgba(66, 214, 255, 0.5);
     overflow: hidden;
     border: 1px solid #444;
     animation: popup-appear 0.3s ease-out;
+    display: flex;
+    flex-direction: column; /* Organizar header y body en columna */
 }
 
 @keyframes popup-appear {
@@ -999,6 +1001,7 @@ textarea:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0; /* Evita que el encabezado se encoja */
 }
 
 .thinking-popup-header h3 {
@@ -1020,13 +1023,21 @@ textarea:focus {
 
 .thinking-popup-body {
     padding: 20px;
-    max-height: calc(80vh - 60px);
-    overflow-y: auto;
+    flex-grow: 1; /* Permite que el cuerpo ocupe todo el espacio disponible */
+    overflow-y: auto; /* Scroll vertical cuando sea necesario */
+    overflow-x: hidden; /* Oculta el scroll horizontal */
     color: var(--text-color);
     font-family: monospace;
-    white-space: pre-wrap;
     line-height: 1.5;
     font-size: 14px;
+}
+
+/* Asegurar que el contenido pre dentro del popup se ajuste correctamente */
+.thinking-popup-body pre {
+    white-space: pre-wrap; /* Permite que el texto se envuelva */
+    word-wrap: break-word; /* Rompe palabras largas si es necesario */
+    max-width: 100%; /* Asegura que no se desborde del contenedor */
+    margin: 0; /* Elimina márgenes predeterminados de pre */
 }
 
 @media (max-width: 768px) {
