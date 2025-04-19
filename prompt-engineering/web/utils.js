@@ -10,6 +10,65 @@ const charCounter = document.getElementById('char-counter');
 const wordCounter = document.getElementById('word-counter');
 const tokenTooltip = document.getElementById('token-tooltip');
 
+// Objeto para almacenar el contenido de thinking para cada modelo
+const thinkingContent = {};
+
+// Crear el elemento del popup si no existe
+let thinkingPopup = document.getElementById('thinking-popup');
+if (!thinkingPopup) {
+    thinkingPopup = document.createElement('div');
+    thinkingPopup.id = 'thinking-popup';
+    thinkingPopup.className = 'thinking-popup';
+    thinkingPopup.innerHTML = `
+        <div class="thinking-popup-content">
+            <div class="thinking-popup-header">
+                <h3>Pensamiento del modelo</h3>
+                <span class="thinking-popup-close">&times;</span>
+            </div>
+            <div class="thinking-popup-body"></div>
+        </div>
+    `;
+    document.body.appendChild(thinkingPopup);
+
+    // Agregar evento para cerrar el popup cuando se hace clic en la X
+    const closeBtn = thinkingPopup.querySelector('.thinking-popup-close');
+    closeBtn.addEventListener('click', () => {
+        thinkingPopup.classList.remove('active');
+    });
+
+    // Cerrar el popup si se hace clic fuera de su contenido
+    thinkingPopup.addEventListener('click', (event) => {
+        if (event.target === thinkingPopup) {
+            thinkingPopup.classList.remove('active');
+        }
+    });
+}
+
+// Agregar listener a todas las bombillas después de que se cargue el DOM
+document.addEventListener('DOMContentLoaded', () => {
+    setupThinkingIndicators();
+});
+
+// Inicializar eventos para los indicadores de thinking
+function setupThinkingIndicators() {
+    document.querySelectorAll('.thinking-indicator').forEach(indicator => {
+        indicator.addEventListener('click', (event) => {
+            event.stopPropagation(); // Evitar que el clic se propague
+            console.log("Clic en thinking indicator", indicator.classList.contains('active'));
+            if (indicator.classList.contains('active')) {
+                const modelId = indicator.closest('.result-section')?.id;
+                console.log("Model ID:", modelId, "Content:", thinkingContent[modelId]);
+                if (modelId && thinkingContent[modelId]) {
+                    const popupBody = document.querySelector('.thinking-popup-body');
+                    if (popupBody) {
+                        popupBody.innerHTML = `<pre>${thinkingContent[modelId]}</pre>`;
+                        document.getElementById('thinking-popup').classList.add('active');
+                    }
+                }
+            }
+        });
+    });
+}
 
 // Function to call the API to count tokens
 const countTokens = async (text) => {
@@ -155,13 +214,21 @@ function processBufferForDisplay(buffer, thinkingIndicator) {
     let result = '';
     let currentPos = 0;
     
+    // Obtener el ID del modelo desde el indicador de pensamiento
+    let modelId = null;
+    if (thinkingIndicator) {
+        const resultSection = thinkingIndicator.closest('.result-section');
+        if (resultSection) {
+            modelId = resultSection.id;
+        }
+    }
+    
     while (true) {
         // Find the next <think> tag
         const thinkStartPos = buffer.indexOf('<think>', currentPos);
         
         if (thinkStartPos === -1) {
             // No more <think> tags, add the rest of text from current position
-            // but only up to the last completed tag or segment
             result += buffer.substring(currentPos);
             break;
         }
@@ -176,15 +243,32 @@ function processBufferForDisplay(buffer, thinkingIndicator) {
             // No closing tag yet, activate thinking indicator
             if (thinkingIndicator) {
                 thinkingIndicator.classList.add('active');
+                
+                // Si hay contenido parcial de thinking, lo guardamos temporalmente
+                const partialThinking = buffer.substring(thinkStartPos + '<think>'.length);
+                if (modelId) {
+                    thinkingContent[modelId] = partialThinking;
+                }
             }
             
             // Return what we've processed so far (before the <think> tag)
             return result;
         }
         
-        // Found both opening and closing tags
+        // Extract thinking content between tags
+        const thinking = buffer.substring(thinkStartPos + '<think>'.length, thinkEndPos);
+        
+        // Store the thinking content with the model ID
+        if (modelId) {
+            thinkingContent[modelId] = thinking;
+        }
+        
+        // Activate the thinking indicator and make it clickable
         if (thinkingIndicator) {
-            thinkingIndicator.classList.remove('active');
+            thinkingIndicator.classList.add('active');
+            thinkingIndicator.style.cursor = 'pointer';
+            // Asegurar que tenga un atributo data-model-id
+            thinkingIndicator.setAttribute('data-model-id', modelId);
         }
         
         // Skip the content between tags and continue from after </think>

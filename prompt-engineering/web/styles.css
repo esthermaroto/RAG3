@@ -931,27 +931,102 @@ textarea:focus {
     transition: all 0.3s ease;
     opacity: 0.5;
     filter: grayscale(100%);
+    cursor: default;
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .thinking-indicator.active {
     opacity: 1;
     filter: none;
-    animation: thinking-pulse 1.5s infinite ease-in-out;
+    animation: none;
+    cursor: pointer;
 }
 
-@keyframes thinking-pulse {
+.thinking-indicator.active:hover {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
+/* Estilos para el popup de thinking */
+.thinking-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s ease;
+    backdrop-filter: blur(3px);
+}
+
+.thinking-popup.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.thinking-popup-content {
+    background: var(--bg-card);
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(66, 214, 255, 0.5);
+    overflow: hidden;
+    border: 1px solid #444;
+    animation: popup-appear 0.3s ease-out;
+}
+
+@keyframes popup-appear {
     0% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 1;
+        transform: scale(0.9);
+        opacity: 0;
     }
     100% {
         transform: scale(1);
-        opacity: 0.8;
+        opacity: 1;
     }
+}
+
+.thinking-popup-header {
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--magic-color-2), var(--magic-color-3));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.thinking-popup-header h3 {
+    margin: 0;
+    color: white;
+    font-weight: 600;
+}
+
+.thinking-popup-close {
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.thinking-popup-close:hover {
+    transform: scale(1.2);
+}
+
+.thinking-popup-body {
+    padding: 20px;
+    max-height: calc(80vh - 60px);
+    overflow-y: auto;
+    color: var(--text-color);
+    font-family: monospace;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    font-size: 14px;
 }
 
 @media (max-width: 768px) {
