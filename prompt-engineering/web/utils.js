@@ -388,6 +388,8 @@ submitBtn.addEventListener('click', async () => {
     resultSections.forEach(section => {
         if (section.style.display === 'block') {
             section.classList.add('empty');
+            // Eliminar la clase 'processing' si existe de intentos anteriores
+            section.classList.remove('processing');
 
             // Clear content and reset time
             const contentEl = section.querySelector('.result-content');
@@ -417,10 +419,26 @@ submitBtn.addEventListener('click', async () => {
                 generateStream(modelId, description);
             }
         } else {
-            // For Ollama models, run sequentially
+            // For Ollama models, run sequentially and mark the current processing model
             const runSequentially = async () => {
                 for (const modelId of activeModels) {
+                    // Marcar el modelo actual como "en procesamiento"
+                    const currentSection = document.getElementById(modelId);
+                    if (currentSection) {
+                        // Quitar la clase 'processing' de todos los modelos
+                        resultSections.forEach(section => {
+                            section.classList.remove('processing');
+                        });
+                        // Añadir la clase 'processing' al modelo actual
+                        currentSection.classList.add('processing');
+                    }
+                    
                     await generateStream(modelId, description);
+                    
+                    // Una vez terminado, quitar la clase 'processing'
+                    if (currentSection) {
+                        currentSection.classList.remove('processing');
+                    }
                 }
             };
             await runSequentially();
@@ -443,6 +461,11 @@ submitBtn.addEventListener('click', async () => {
 
             errorSection.classList.remove('empty');
         }
+        
+        // Asegurarse de quitar la clase 'processing' de todos los modelos en caso de error
+        resultSections.forEach(section => {
+            section.classList.remove('processing');
+        });
     } finally {
         submitBtn.disabled = false;
     }

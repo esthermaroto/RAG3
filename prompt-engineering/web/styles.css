@@ -975,6 +975,43 @@ textarea:focus {
     filter: brightness(1.2);
 }
 
+/* Estilos para el modelo que está siendo procesado actualmente */
+.result-section.processing {
+    box-shadow: 0 0 25px rgba(255, 154, 0, 0.5); /* Brillo anaranjado para modelos de Ollama */
+    border-left: 4px solid #ff7b00; /* Borde naranja para modelos de Ollama */
+    transform: translateY(-3px); /* Efecto de elevación */
+    background-color: #252525; /* Fondo ligeramente más claro */
+    animation: processing-pulse 2s infinite ease-in-out;
+    position: relative;
+    z-index: 5; /* Asegurar que esté por encima de otros elementos */
+}
+
+.result-section.processing::after {
+    content: "⚙️ Procesando...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ff9a00;
+    z-index: 6;
+    box-shadow: 0 0 10px rgba(255, 154, 0, 0.3);
+    white-space: nowrap;
+}
+
+@keyframes processing-pulse {
+    0%, 100% {
+        box-shadow: 0 0 25px rgba(255, 154, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(255, 154, 0, 0.8);
+    }
+}
+
 /* Estilos para el popup de thinking */
 .thinking-popup {
     position: fixed;

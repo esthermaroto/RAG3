@@ -189,6 +189,7 @@ const modelNames = {
     'mistral-ai/Mistral-Nemo': 'Mistral Nemo',
     'openai/gpt-4o': 'GPT-4o',
     'microsoft/Phi-4': 'Phi-4',
+    "phi4-mini": "Phi-4 Mini",
     'deepseek/DeepSeek-R1': 'DeepSeek R1',
     'gemma3': 'Gemma 3',
     'llama3.1': 'Llama 3.1'

@@ -78,5 +78,5 @@
             
         }
     ],
-    "prompty.currentModelConfiguration": "microsoft/Phi-4"
+    "prompty.currentModelConfiguration": "openai/gpt-4o"
 }
