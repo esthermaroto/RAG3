@@ -24,9 +24,8 @@ cd text_generation/api
 pip install -r requirements.txt
 ```
 
-Ejecutar el servidor web:
+Ejecutar el servidor web en modo desarrollo:
 
 ```bash
-export FLASK_ENV=development
-flask run
+FLASK_DEBUG=1 flask run --host=0.0.0.0 --port=5000
 ```
