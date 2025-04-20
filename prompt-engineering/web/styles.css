@@ -328,13 +328,16 @@ textarea:focus {
 
 /* Estilos base para los badges */
 .model-badge, .time-badge, .char-count-badge, .retry-badge, .retry-btn {
-    font-size: 8px; /* Reducido de 9px */
-    padding: 3px 6px; /* Reducido el padding horizontal */
+    font-size: 10px; /* Incrementado de 8px para mejor legibilidad */
+    padding: 4px 8px; /* Incrementado el padding */
     min-width: fit-content; /* Asegurar que se ajuste al contenido */
     white-space: nowrap;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7); /* Añadir sombra al texto para mejor contraste */
-    font-weight: 700; /* Hacer el texto más bold para mejor legibilidad */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7); /* Mantener sombra al texto para mejor contraste */
+    font-weight: 600; /* Ajustado para mejor legibilidad */
     letter-spacing: 0.3px; /* Mejorar la separación entre letras */
+    border-radius: 5px; /* Bordes más redondeados para suavizar apariencia */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Sombra más suave */
+    border: none; /* Eliminar bordes */
 }
 
 /* Restaurar el gradiente específico para cada tipo de badge con colores más contrastados */
@@ -362,17 +365,36 @@ textarea:focus {
 .retry-btn {
     background: linear-gradient(135deg, #0d85ff, #0747a1);
     color: white;
+    cursor: pointer; /* Asegurar que se vea como botón clicable */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
 }
 
 /* Mantener el estilo para el límite de reintentos alcanzado con mejor contraste */
 .retry-limit-reached {
     background: linear-gradient(135deg, #ff0022, #a1071f);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.9);
 }
 
 /* Estilo específico para el botón de GitHub */
 .github-btn {
+    width: 50px;
+    height: 50px;
     background: linear-gradient(135deg, #333333, #222222);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .github-btn .github-icon {
