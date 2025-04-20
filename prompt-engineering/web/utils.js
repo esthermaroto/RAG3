@@ -250,6 +250,8 @@ const generateStream = async (model_name, description, retry = false, originalTi
     let fullContent = '';
     // Buffer to hold text fragments that might contain incomplete HTML tags
     let buffer = '';
+    // Flag to track if we've received the first chunk of response
+    let firstChunkReceived = false;
 
     while (true) {
         const { done, value } = await reader.read();
@@ -388,6 +390,14 @@ const generateStream = async (model_name, description, retry = false, originalTi
             
             // Update character count as content is streamed
             countResultChars(fullContent, resultSection);
+
+            // Remove "Procesando..." once the first chunk is received
+            if (!firstChunkReceived) {
+                if (timeElement) {
+                    timeElement.textContent = '';
+                }
+                firstChunkReceived = true;
+            }
         }
     }
 };

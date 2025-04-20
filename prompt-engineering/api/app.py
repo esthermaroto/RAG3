@@ -108,7 +108,7 @@ def generate():
                     {"role": "user", "content": user_prompt},
                 ],
                 "stream": True,
-                "temperature": 0.7,
+                "temperature": 0.8,
             }
 
             if source == 'ollama':
