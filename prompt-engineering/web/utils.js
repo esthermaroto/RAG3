@@ -579,6 +579,16 @@ submitBtn.addEventListener('click', async () => {
         return;
     }
 
+    // Reset all retry counters and remove retry badges
+    Object.keys(retryCount).forEach(key => {
+        retryCount[key] = 0;
+    });
+    
+    // Remove all retry badges
+    document.querySelectorAll('.retry-badge').forEach(badge => {
+        badge.remove();
+    });
+
     // Reset all visible sections to empty/waiting
     resultSections.forEach(section => {
         if (section.style.display === 'block') {

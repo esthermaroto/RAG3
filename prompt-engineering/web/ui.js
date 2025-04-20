@@ -192,7 +192,8 @@ const modelNames = {
     "phi4-mini": "Phi-4 Mini",
     'deepseek/DeepSeek-R1': 'DeepSeek R1',
     'gemma3': 'Gemma 3',
-    'llama3.1': 'Llama 3.1'
+    'llama3.1': 'Llama 3.1',
+    'mistral-small3.1': 'Mistral Small 3.1'
 };
 
 // Mark all result sections as empty initially
