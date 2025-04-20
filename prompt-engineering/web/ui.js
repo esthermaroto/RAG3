@@ -192,7 +192,7 @@ const modelNames = {
     "phi4-mini": "Phi-4 Mini",
     'deepseek/DeepSeek-R1': 'DeepSeek R1',
     'gemma3': 'Gemma 3',
-    'llama3.1': 'Llama 3.1',
+    'llama3.2': 'Llama 3.2',
     'mistral-small3.1': 'Mistral Small 3.1'
 };
 
@@ -212,11 +212,10 @@ updateResultSectionsVisibility();
 
 // Animation to simulate typing in the user input field
 let placeholders = [
-    "Videojuegos para principiantes...",
-    "Recetas fáciles para estudiantes...",
-    "Tutoriales de tecnología...",
-    "Consejos para viajes económicos...",
-    "Reseñas de productos tech..."
+    "¡Hola developer 👋🏻! En este vídeo te cuento qué es GitHub Advanced Security y te ...",
+    "¡Hola developer 👋🏻! En este vídeo, de mi serie sobre DevSecOps, te cuento qué son los pre-commit hooks ...",
+    "¡Hola developer 👋🏻! Con este vídeo comienzo una nueva serie sobre cómo desarrollar funcionalidades para ..."
+  
 ];
 let currentPlaceholderIndex = 0;
 let charIndex = 0;
