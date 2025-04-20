@@ -358,8 +358,18 @@ textarea:focus {
 }
 
 .retry-badge {
-    background: linear-gradient(135deg, #0d85ff, #0747a1);
-    color: white;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.result-section:hover .retry-badge {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* Estilo especial cuando se alcanza el límite de reintentos */
+.retry-limit-reached {
+    background: linear-gradient(135deg, #ff0022, #a1071f);
 }
 
 .retry-btn {
@@ -814,17 +824,8 @@ textarea:focus {
 
 /* Retry badge - indica cuando un título ha sido reintentado */
 .retry-badge {
-    font-weight: 600;
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
     opacity: 0.8;
     transition: all 0.3s ease;
-    /* Estilo de bookmark */
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .result-section:hover .retry-badge {
@@ -834,7 +835,7 @@ textarea:focus {
 
 /* Estilo especial cuando se alcanza el límite de reintentos */
 .retry-limit-reached {
-    background: linear-gradient(135deg, #dc3545, #b21f2d);
+    background: linear-gradient(135deg, #ff0022, #a1071f);
 }
 
 /* Nota de reintento - mensaje temporal durante el reintento */

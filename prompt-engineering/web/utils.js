@@ -516,10 +516,10 @@ function updateRetryBadge(model_name, resultSection, isLimitReached = false) {
     
     // Update badge content based on retry count
     if (isLimitReached) {
-        retryBadge.textContent = `Reintentos: ${currentRetryCount}/3 (Límite)`;
+        retryBadge.innerHTML = `<i class="fas fa-redo-alt"></i> ${currentRetryCount}/3`;
         retryBadge.classList.add('retry-limit-reached');
     } else {
-        retryBadge.textContent = `Reintentos: ${currentRetryCount}/3`;
+        retryBadge.innerHTML = `<i class="fas fa-redo-alt"></i> ${currentRetryCount}/3`;
         retryBadge.classList.remove('retry-limit-reached');
     }
     
