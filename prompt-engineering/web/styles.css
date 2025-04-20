@@ -326,25 +326,48 @@ textarea:focus {
     animation: gradientShift 5s ease infinite;
 }
 
-/* Estilos base para los botones circulares (GitHub y Llama) */
-.github-btn, .llama-btn {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #333333, #222222);
-    background-size: 200% 200%;
+/* Estilos base para los badges */
+.model-badge, .time-badge, .char-count-badge, .retry-badge, .retry-btn {
+    font-size: 8px; /* Reducido de 9px */
+    padding: 3px 6px; /* Reducido el padding horizontal */
+    min-width: fit-content; /* Asegurar que se ajuste al contenido */
+    white-space: nowrap;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7); /* Añadir sombra al texto para mejor contraste */
+    font-weight: 700; /* Hacer el texto más bold para mejor legibilidad */
+    letter-spacing: 0.3px; /* Mejorar la separación entre letras */
+}
+
+/* Restaurar el gradiente específico para cada tipo de badge con colores más contrastados */
+.model-badge {
+    background: linear-gradient(135deg, #ff2e8a, #4834ff);
     color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 24px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.7;
+}
+
+.time-badge {
+    background: linear-gradient(135deg, #00c6ff, #2d20ff);
+    color: white;
+}
+
+.char-count-badge {
+    background: linear-gradient(135deg, #00ff8c, #00c4ff);
+    color: #000; /* Texto negro para mejor contraste con fondo claro */
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3); /* Sombra clara para fondo claro */
+}
+
+.retry-badge {
+    background: linear-gradient(135deg, #0d85ff, #0747a1);
+    color: white;
+}
+
+.retry-btn {
+    background: linear-gradient(135deg, #0d85ff, #0747a1);
+    color: white;
+}
+
+/* Mantener el estilo para el límite de reintentos alcanzado con mejor contraste */
+.retry-limit-reached {
+    background: linear-gradient(135deg, #ff0022, #a1071f);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.9);
 }
 
 /* Estilo específico para el botón de GitHub */
@@ -694,8 +717,8 @@ textarea:focus {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 15px;
-    min-height: 200px;
+    gap: 20px;
+    min-height: 300px;
 }
 
 .result-section {
@@ -705,15 +728,15 @@ textarea:focus {
     font-weight: 500;
     font-size: 16px;
     line-height: 1.5;
-    min-height: 80px;
+    min-height: 120px;
     border-left: 4px solid var(--primary-color);
     transition: all 0.3s ease;
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     cursor: pointer;
-    position: relative; /* Asegurarse de que la posición sea relativa para posicionar el badge */
-    padding-bottom: 30px; /* Asegurar espacio para los badges */
+    position: relative;
+    padding-bottom: 45px;
 }
 
 .result-section:hover {
@@ -756,158 +779,41 @@ textarea:focus {
 /* Nuevos estilos para los badges de modelo y tiempo */
 .model-badges {
     position: absolute;
-    bottom: 0;
+    bottom: 5px;
     right: 10px;
     display: flex;
-    gap: 5px;
+    gap: 6px; /* Reducido de 8px a 6px para ahorrar espacio */
     z-index: 5;
-}
-
-.model-badge {
-    background: linear-gradient(135deg, var(--magic-color-1), var(--magic-color-2));
-    color: white;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 3px 8px;
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-    opacity: 0.8;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    /* Estilo de bookmark */
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.time-badge {
-    background: linear-gradient(135deg, var(--magic-color-3), var(--magic-color-2));
-    color: white;
-    font-size: 9px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-    opacity: 0.8;
-    transition: all 0.3s ease;
-    /* Estilo de bookmark */
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.char-count-badge {
-    background: linear-gradient(135deg, #42ff8e, var(--magic-color-3));
-    color: white;
-    font-size: 9px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-    opacity: 0.8;
-    transition: all 0.3s ease;
-    /* Estilo de bookmark */
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.char-count-badge i {
-    margin-right: 3px;
-    font-size: 8px;
-}
-
-.result-section:hover .char-count-badge {
-    opacity: 1;
-    transform: translateY(-2px);
-}
-
-/* Estilo para el botón de retry */
-.retry-btn {
-    background: linear-gradient(135deg, #2196F3, #0d47a1);
-    color: white;
-    width: 22px;
-    height: 22px;
-    border: none;
-    border-radius: 3px 3px 0 0;
-    cursor: pointer;
-    font-size: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-    opacity: 0.8;
-    transition: all 0.3s ease;
-    padding: 0;
-}
-
-.retry-btn:hover {
-    opacity: 1;
-    transform: translateY(-2px);
-    box-shadow: 0 -3px 8px rgba(33, 150, 243, 0.4);
-}
-
-.retry-btn:active {
-    transform: translateY(0);
-}
-
-.retry-btn i {
-    font-size: 10px;
-}
-
-.time-badge i {
-    margin-right: 3px;
-    font-size: 8px;
-}
-
-.result-section:hover .model-badge,
-.result-section:hover .time-badge {
-    opacity: 1;
-    transform: translateY(-2px);
-}
-
-.result-content {
-    width: 100%;
-    overflow-y: auto;
-    max-height: 200px;
-    padding-right: 10px;
-    font-size: 15px;
-    color: #ddd;
+    flex-wrap: nowrap; /* Forzar una sola fila */
+    justify-content: flex-end;
+    max-width: 95%; /* Aumentado de 90% a 95% para dar más espacio horizontal */
+    overflow-x: auto; /* Permitir scroll horizontal si es necesario */
+    padding-bottom: 2px; /* Dar espacio para el scroll si aparece */
 }
 
 /* Retry badge - indica cuando un título ha sido reintentado */
 .retry-badge {
-    background-color: #007bff;
-    color: white;
-    font-size: 0.8em;
-    padding: 3px 8px;
-    border-radius: 12px;
-    margin-left: 10px;
-    display: inline-block;
-    font-weight: bold;
+    font-weight: 600;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    /* Estilo de bookmark */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-section:hover .retry-badge {
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
 /* Estilo especial cuando se alcanza el límite de reintentos */
 .retry-limit-reached {
-    background-color: #dc3545;
-}
-
-/* Estilo para la nota de límite de reintentos */
-.retry-limit-note {
-    color: #dc3545;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #dc3545;
-    background-color: #f8d7da;
-    border-radius: 5px;
-    font-weight: bold;
+    background: linear-gradient(135deg, #dc3545, #b21f2d);
 }
 
 /* Nota de reintento - mensaje temporal durante el reintento */
