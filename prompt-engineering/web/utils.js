@@ -130,9 +130,11 @@ userInput.addEventListener('input', (e) => {
     debouncedUpdateCounters(e.target.value);
 });
 
-
 // Object to store the start times of each stream
 const startTimes = {};
+
+// Object to track retry counts for each model
+const retryCount = {};
 
 // Function to count characters for a model result
 const countResultChars = (text, resultSection) => {
@@ -148,7 +150,43 @@ const countResultChars = (text, resultSection) => {
 };
 
 // Call the API to generate content for a given model and description
-const generateStream = async (model_name, description) => {
+const generateStream = async (model_name, description, retry = false, originalTitle = null) => {
+    // Inicializar el contador de reintentos para este modelo si no existe
+    if (!retryCount[model_name]) {
+        retryCount[model_name] = 0;
+    }
+    
+    // Incrementar el contador si es un reintento
+    if (retry) {
+        retryCount[model_name]++;
+        console.log(`Reintento #${retryCount[model_name]} para ${model_name}`);
+        
+        // Si ya hemos alcanzado el máximo de reintentos, no continuar
+        if (retryCount[model_name] > 3) {
+            const resultSection = document.getElementById(model_name);
+            const resultContent = resultSection.querySelector('.result-content');
+            
+            // Eliminar cualquier nota de reintento existente
+            const existingNote = resultContent.querySelector('.retry-note');
+            if (existingNote) {
+                existingNote.remove();
+            }
+            
+            // Agregar mensaje de límite alcanzado
+            const limitNote = document.createElement('div');
+            limitNote.className = 'retry-limit-note';
+            limitNote.textContent = '⚠️ Límite de reintentos alcanzado (3). No se pudo generar un título de menos de 70 caracteres.';
+            resultContent.appendChild(limitNote);
+            
+            // Actualizar el badge de reintentos para indicar el límite
+            updateRetryBadge(model_name, resultSection, true);
+            
+            return; // No continuar con la generación
+        }
+    } else {
+        // Resetear el contador si no es un reintento
+        retryCount[model_name] = 0;
+    }
 
     // Add the source parameter to the API call and use POST method
     const response = await fetch(`${API_URL}/generate`, {
@@ -159,7 +197,9 @@ const generateStream = async (model_name, description) => {
         body: JSON.stringify({
             model: model_name,
             description: description,
-            source: activeSource
+            source: activeSource,
+            retry: retry,
+            originalTitle: originalTitle
         })
     });
     const reader = response.body.getReader();
@@ -174,7 +214,20 @@ const generateStream = async (model_name, description) => {
 
     // Update the interface to show that it is loading
     const resultContent = resultSection.querySelector('.result-content');
-    resultContent.innerHTML = ''; // Clear previous content
+    
+    // Para reintento, limpiar el contenido previo completamente
+    // pero guardar una referencia a cualquier nota de reintento existente
+    let retryNote = null;
+    if (retry) {
+        retryNote = resultContent.querySelector('.retry-note');
+        resultContent.innerHTML = '';
+        // Si hay una nota de reintento, volver a añadirla
+        if (retryNote) {
+            resultContent.appendChild(retryNote);
+        }
+    } else {
+        resultContent.innerHTML = ''; // Clear previous content for initial generation
+    }
 
     // Get the thinking indicator
     const thinkingIndicator = resultSection.querySelector('.thinking-indicator');
@@ -191,40 +244,83 @@ const generateStream = async (model_name, description) => {
     }
 
     // Reset character count
-    const charCountElement = resultSection.querySelector('.char-count-value');
-    if (charCountElement) {
-        charCountElement.textContent = '0 caracteres';
-    }
+    countResultChars('', resultSection);
     
-    // Buffer to hold all text
+    // Variables to accumulate the full content for character counting
+    let fullContent = '';
+    // Buffer to hold text fragments that might contain incomplete HTML tags
     let buffer = '';
-    let fullContent = ''; // Track the full content for character counting
-    
+
     while (true) {
         const { done, value } = await reader.read();
         if (done) {
-            // Process any remaining buffer text
-            const processedText = processBufferForDisplay(buffer, thinkingIndicator);
-            if (processedText) {
-                resultContent.innerHTML += processedText;
-                fullContent += processedText; // Add to full content
+            // Count the chars for the final output
+            const charCount = countResultChars(fullContent, resultSection);
+            
+            // Check if title is too long (more than 70 characters)
+            if (charCount > 70) {
+                // Si es un reintento, y aún así sigue siendo demasiado largo
+                // intentar de nuevo
+                if (retry) {
+                    console.log(`🔄 Title still too long after retry: ${charCount} characters. Retrying again...`);
+                    
+                    // Actualizar la nota de reintento para indicar que lo intentamos de nuevo
+                    let retryNote = resultContent.querySelector('.retry-note');
+                    if (retryNote) {
+                        retryNote.textContent = '⏳ El título sigue siendo demasiado largo, reintentando de nuevo...';
+                    } else {
+                        // Si no existía la nota (raro pero por seguridad), la creamos
+                        retryNote = document.createElement('div');
+                        retryNote.className = 'retry-note';
+                        retryNote.textContent = '⏳ El título sigue siendo demasiado largo, reintentando de nuevo...';
+                        resultContent.appendChild(retryNote);
+                    }
+                    
+                    try {
+                        // Volver a intentar con el título acortado como base
+                        await generateStream(model_name, description, true, fullContent.trim());
+                    } catch (error) {
+                        console.error(`Error durante el reintento para ${model_name}:`, error);
+                        // No mostrar el mensaje de error al usuario, mantener el contenido actual
+                        // En su lugar, simplemente actualizar el badge de reintentos
+                        updateRetryBadge(model_name, resultSection);
+                    }
+                    return; // Terminar este intento y dejar que el nuevo se encargue
+                } else {
+                    // Primer intento con título demasiado largo
+                    console.log(`🚨 Title too long for ${model_name}: ${charCount} characters. Retrying...`);
+                    
+                    // Add a note that we're retrying
+                    const retryNote = document.createElement('div');
+                    retryNote.className = 'retry-note';
+                    retryNote.textContent = '⏳ Título demasiado largo, reintentando...';
+                    resultContent.appendChild(retryNote);
+                    
+                    try {
+                        // Make a second attempt with the original title
+                        await generateStream(model_name, description, true, fullContent.trim());
+                    } catch (error) {
+                        console.error(`Error durante el reintento inicial para ${model_name}:`, error);
+                        // No mostrar el mensaje de error al usuario, mantener el contenido actual
+                        // En su lugar, simplemente actualizar el badge de reintentos
+                        updateRetryBadge(model_name, resultSection);
+                    }
+                    return; // Terminate here to avoid continuing with processing
+                }
+            } else {
+                // El título es correcto (menor a 70 caracteres)
+                // Eliminar cualquier mensaje de reintento existente
+                const retryNote = resultContent.querySelector('.retry-note');
+                if (retryNote) {
+                    retryNote.remove();
+                }
+                
+                // Actualizar badge con el contador de reintentos si es necesario
+                if (retry || retryCount[model_name] > 0) {
+                    // Actualizar el badge con la cantidad de reintentos realizados
+                    updateRetryBadge(model_name, resultSection);
+                }
             }
-            
-            // Record the end time and calculate the response time
-            const endTime = performance.now();
-            const responseTime = ((endTime - startTimes[model_name]) / 1000).toFixed(2);
-
-            // Update the time element with the response time
-            if (timeElement) {
-                timeElement.textContent = `${responseTime} segundos`;
-            }
-            
-            // Update character count
-            countResultChars(fullContent, resultSection);
-            
-            // Do NOT turn off the thinking indicator when done
-            // The thinking indicator should remain active if thinking content exists
-            // This has been removed: thinkingIndicator.classList.remove('active');
             
             break;
         }
@@ -241,8 +337,45 @@ const generateStream = async (model_name, description) => {
         
         // Show processed text if there's any
         if (processedText) {
-            resultContent.innerHTML += processedText;
-            fullContent += processedText; // Add to full content for character counting
+            // Si es un reintento y hay una nota de reintento, conservarla
+            const retryNote = resultContent.querySelector('.retry-note');
+            
+            // Si es un reintento, reemplazar todo el contenido excepto la nota
+            if (retry && retryNote) {
+                // Si es la primera parte de la respuesta que recibimos en un reintento y contiene "Acortando título..."
+                if (fullContent === "" && processedText.includes("Acortando título...")) {
+                    // No hacer nada con este chunk, es un mensaje informativo
+                    // No lo agregamos al fullContent para no contarlo en la longitud final
+                } else {
+                    // Para las siguientes partes (el título real), limpiar el contenido previo pero mantener la nota
+                    
+                    // Si es el primer chunk con contenido real después del informativo, limpiar el contenido previo
+                    if (fullContent === "" || fullContent === "Acortando título...") {
+                        // Limpiar todos los elementos hermanos anteriores a la nota
+                        while (retryNote.previousSibling) {
+                            retryNote.parentNode.removeChild(retryNote.previousSibling);
+                        }
+                    }
+                    
+                    // Añadir el nuevo contenido antes de la nota
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = processedText;
+                    while (tempDiv.firstChild) {
+                        retryNote.parentNode.insertBefore(tempDiv.firstChild, retryNote);
+                    }
+                    
+                    // Solo añadir al contenido completo si no es el mensaje informativo
+                    if (!processedText.includes("Acortando título...")) {
+                        fullContent += processedText;
+                    }
+                }
+            } else {
+                // Comportamiento normal si no es un reintento o no hay nota
+                resultContent.innerHTML += processedText;
+                if (!processedText.includes("Acortando título...")) {
+                    fullContent += processedText; // Add to full content for character counting
+                }
+            }
             
             // Update character count as content is streamed
             countResultChars(fullContent, resultSection);
@@ -342,6 +475,49 @@ function updateThinkingPopupIfActive(modelId) {
             thinkingPopup.setAttribute('data-current-model', modelId);
         }
     }
+}
+
+// Function to update or create retry badge with count
+function updateRetryBadge(model_name, resultSection, isLimitReached = false) {
+    // Check if badge already exists
+    let retryBadge = resultSection.querySelector('.retry-badge');
+    const currentRetryCount = retryCount[model_name] || 0;
+    
+    if (!retryBadge) {
+        // Create new badge if it doesn't exist
+        retryBadge = document.createElement('div');
+        retryBadge.className = 'retry-badge';
+        
+        // Insertar el badge en el contenedor model-badges que sí existe en el HTML
+        const modelBadgesContainer = resultSection.querySelector('.model-badges');
+        if (modelBadgesContainer) {
+            // Insertarlo antes del botón retry (que es el último elemento)
+            const retryButton = modelBadgesContainer.querySelector('.retry-btn');
+            if (retryButton) {
+                modelBadgesContainer.insertBefore(retryBadge, retryButton);
+            } else {
+                // Si no hay botón retry, simplemente añadirlo al final
+                modelBadgesContainer.appendChild(retryBadge);
+            }
+        } else {
+            console.error("No se encontró el contenedor .model-badges para añadir el badge de reintentos");
+            return null; // No se pudo crear el badge
+        }
+    }
+    
+    // Update badge content based on retry count
+    if (isLimitReached) {
+        retryBadge.textContent = `Reintentos: ${currentRetryCount}/3 (Límite)`;
+        retryBadge.classList.add('retry-limit-reached');
+    } else {
+        retryBadge.textContent = `Reintentos: ${currentRetryCount}/3`;
+        retryBadge.classList.remove('retry-limit-reached');
+    }
+    
+    // Add title attribute with more information
+    retryBadge.title = `Se realizaron ${currentRetryCount} reintentos para acortar el título`;
+    
+    return retryBadge;
 }
 
 // Helper function to get the remaining buffer after processing

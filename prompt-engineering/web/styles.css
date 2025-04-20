@@ -882,6 +882,57 @@ textarea:focus {
     color: #ddd;
 }
 
+/* Retry badge - indica cuando un título ha sido reintentado */
+.retry-badge {
+    background-color: #007bff;
+    color: white;
+    font-size: 0.8em;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+/* Estilo especial cuando se alcanza el límite de reintentos */
+.retry-limit-reached {
+    background-color: #dc3545;
+}
+
+/* Estilo para la nota de límite de reintentos */
+.retry-limit-note {
+    color: #dc3545;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #dc3545;
+    background-color: #f8d7da;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Nota de reintento - mensaje temporal durante el reintento */
+.retry-note {
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #fff3e0;
+    border-left: 3px solid #ff9800;
+    color: #e65100;
+    font-size: 0.85rem;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
 /* Estilos para el mensaje toast de copiado */
 .toast {
     position: fixed;

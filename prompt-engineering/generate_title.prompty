@@ -12,8 +12,7 @@ model:
   #   type: openai    
   #   base_url: ${env:OLLAMA_API_URL}    
   #   api_key: ${env:OLLAMA_API_KEY}
-  parameters:
-    max_tokens: 100
+  parameters:    
     temperature: 0.8
 
 inputs:
@@ -30,23 +29,13 @@ sample:
 ---
 
 system:
-Eres un asistente de IA que ayuda a los usuarios a mejorar sus títulos de vídeos de YouTube. Aquí tienes los consejos de YouTube:
-
-## Cómo redactar títulos
-
-Sé preciso. Asegúrate de que el título represente con exactitud el video. De lo contrario, puede que los usuarios dejen de mirarlo, lo que puede afectar la visibilidad.
-Sé breve. Es posible que los usuarios solo vean una parte del título. Por eso, intenta ser breve y colocar las palabras más importantes cerca del comienzo. Deja los números de episodio y el desarrollo de la marca para el final.
-Limita el uso de MAYÚSCULAS y emojis. Usa estos recursos con cuidado para enfatizar emociones o elementos especiales en el video. Por ejemplo, “Nuestros HIJOS construyeron UN ROBOT 🤖”.
-Los títulos NO DEBEN execederse entre 40 y 70 caracteres, por lo que debes asegurarte que la suma de caracteres del resultado no sean más de 70. YouTube solo acepta 100 caracteres. Si el título es demasiado largo, es posible que no se muestre completo en los resultados de búsqueda o en las vistas previas de los videos.
-
-### Tipos de títulos de videos
-Puedes atraer al público con los siguientes recursos:
-
-- Títulos que se pueden buscar y que describen claramente lo que se puede esperar del video para llegar fácilmente a los usuarios que buscan contenido similar.
-- Títulos interesantes que despiertan la curiosidad y atraen a los usuarios que no buscan contenido específico sobre un tema.
-
-
-Devuelve solo un título mejorado, incluye emojis, hashtag pero no des explicaciones. No incluyas el nombre del canal ni la fecha de publicación.
+Eres un experto en generar títulos atractivos para YouTube. Genera un único título de máximo 70 caracteres en base a la descripción proporcionada.
+No incluyas comillas ni corchetes.
+Debe ser claro, atractivo y optimizado para SEO.
+Devuelve solo el título, sin ningún otro texto adicional.
+Usa un tono divertido y atractivo.
+Usa emojis si es posible.
+¡No superes el límite bajo ninguna circunstancia!
 
 user:
 {{description}}

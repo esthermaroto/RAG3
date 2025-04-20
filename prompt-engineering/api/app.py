@@ -28,18 +28,13 @@ def create_openai_client(source):
     return None
 
 
-def process_stream_response(stream_response, check_length=False):
+def process_stream_response(stream_response):
     """Process the streaming response from the API"""
-    full_response = ""
     for chunk in stream_response:
         if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
             content = chunk.choices[0].delta.content
-            full_response += content
             yield content
-    
-    # If we need to check the length, return the full response
-    if check_length:
-        return full_response
+
 
 
 @app.route("/generate", methods=["POST"])
@@ -49,15 +44,16 @@ def generate():
     description = data.get('description')
     source = data.get('source')
     retry = data.get('retry', False)
+    original_title = data.get('originalTitle')
 
     print(f"Source: {source}")
     print(f"Model: {model_name}")
     print(f"Description: {description}")
+    print(f"Retry: {retry}")
+    if retry:
+        print(f"Original title: {original_title} ({len(original_title) if original_title else 0} chars)")
 
-    def generate_stream():
-
-        print(f"Source for generation: {source}")
-
+    def generate_stream():       
         if source not in ['github', 'ollama']:
             yield f"🤔 Unknown source: {source}\n"
             return
@@ -79,61 +75,74 @@ def generate():
                 yield f"👎🏻 Failed to create client for source: {source}"
                 return
 
-            # Function to generate title with auto-retry logic
-            def generate_title(client, description, is_retry=False):
-                system_prompt = ("Eres un experto en generar títulos atractivos para YouTube. "
-                                "Genera un único título de máximo 70 caracteres en base a la descripción proporcionada. "
-                                "No incluyas comillas ni corchetes. "
-                                "Debe ser claro, atractivo y optimizado para SEO."
-                                "Devuelve solo el título, sin ningún otro texto adicional. "
-                                )
-                if is_retry:
-                    system_prompt += "Asegúrate absolutamente de que no supere los 70 caracteres."
+            system_prompt = ("Eres un experto en generar títulos atractivos para YouTube. "
+                            "Genera un único título de máximo 70 caracteres en base a la descripción proporcionada. "
+                            "No incluyas comillas, ni simples ni dobles, ni corchetes. "
+                            "Debe ser claro, atractivo y optimizado para SEO. "
+                            "Devuelve solo el título, sin ningún otro texto adicional. "                            
+                            "Usa un tono divertido y atractivo. "
+                            "Usa emojis si es posible. "
+                            # "¡No superes el límite bajo ninguna circunstancia!"
+                            )
 
-                # Prepare the parameters for the API call
-                params = {
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": description},
-                    ],
-                    "stream": True,
-                    "temperature": 0.8,
-                }
+            user_prompt = description
 
-                if source == 'ollama':
-                    params["model"] = ollama_model_name
-                else:
-                    params["model"] = model_name
+            # Si es un reintento, modificar los prompts para acortar el título original
+            if retry and original_title:
+                system_prompt += "Asegúrate ABSOLUTAMENTE de que no supere los 70 caracteres. "
+                system_prompt += "Este es un reintento para acortar un título. "
+                system_prompt += "Tu respuesta debe tener menos de 70 caracteres. Es CRÍTICO. "
+                # Hacer más énfasis en la longitud máxima
+                system_prompt += "IMPORTANTE: Si el título tiene más de 70 caracteres, SERÁ RECHAZADO. "
+                
+                # Usar el título original como referencia para acortarlo
+                user_prompt = f"Este título es demasiado largo (tiene {len(original_title)} caracteres): '{original_title}'. Por favor acórtalo manteniendo la esencia y las palabras clave importantes. Asegúrate absolutamente de que no supere los 70 caracteres."
+                print(f"[bold red]REINTENTO SOLICITADO[/bold red]: Acortar título de {len(original_title)} caracteres")
+                # Envía un mensaje de inicio para señalar que estamos procesando el reintento
+                yield "Acortando título..."
 
-                # Count how many tokens we are using that include the instructions and the description
-                encoding = tiktoken.get_encoding("cl100k_base")
-                tokens = encoding.encode(system_prompt + description)
-                token_count = len(tokens)
+            # Prepare the parameters for the API call
+            params = {
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+                "stream": True,
+                "temperature": 0.7,
+            }
 
-                print(f"🫰🏻 Tokens used: {token_count}")
-
-                return client.chat.completions.create(**params)
-            
-            # Initial generation
-            stream_response = generate_title(client, description, is_retry=retry)
-            
-            # If auto-retry is needed, we need to collect the full response first
-            if not retry:  # Only do auto-retry for initial requests, not manually retried ones
-                title = "".join(process_stream_response(stream_response, check_length=True))
-                if len(title) > 70:
-                    print(f"🚨 Title too long: {len(title)} characters. ✨ Auto-retrying...")
-                    # Make a second attempt with retry flag set
-                    stream_response = generate_title(client, description, is_retry=True)
-                    yield from process_stream_response(stream_response)
-                else:
-                    # If title is already good, yield it
-                    yield title
+            if source == 'ollama':
+                params["model"] = ollama_model_name
             else:
-                # For manually retried requests, just stream the response
-                yield from process_stream_response(stream_response)
+                params["model"] = model_name
+
+            # Count how many tokens we are using that include the instructions and the description
+            encoding = tiktoken.get_encoding("cl100k_base")
+            tokens = encoding.encode(system_prompt + user_prompt)
+            token_count = len(tokens)
+
+            print(f"[bold yellow]Tokens used[/bold yellow]: {token_count}")
+            
+            stream_response = client.chat.completions.create(**params)
+            
+            full_response = ""
+            # Procesar el stream y enviar los chunks al cliente
+            for chunk in stream_response:
+                if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
+                    content = chunk.choices[0].delta.content
+                    full_response += content
+                    # Enviar cada fragmento al cliente
+                    yield content
+            
+            # Verificar longitud al final para debugging
+            color = "green" if len(full_response) <= 70 else "red"
+            print(f"[bold {color}]Longitud final: {len(full_response)} caracteres[/bold {color}]")
+            print(f"[bold blue]Título generado: {full_response}[/bold blue]")
 
         except Exception as e:
-            yield f"🤖 Error using OpenAI SDK with {source}: {str(e)}"
+            error_message = f"🤖 Error using OpenAI SDK with {source}: {str(e)}"
+            print(f"[bold red]ERROR[/bold red]: {error_message}")
+            yield error_message
 
     return Response(generate_stream(), content_type="text/event-stream")
 
