@@ -257,6 +257,15 @@ const generateStream = async (model_name, description, retry = false, originalTi
             // Count the chars for the final output
             const charCount = countResultChars(fullContent, resultSection);
             
+            // Record the end time and calculate the response time
+            const endTime = performance.now();
+            const responseTime = ((endTime - startTimes[model_name]) / 1000).toFixed(2);
+
+            // Update the time element with the response time
+            if (timeElement) {
+                timeElement.textContent = `${responseTime} segundos`;
+            }
+            
             // Check if title is too long (more than 70 characters)
             if (charCount > 70) {
                 // Si es un reintento, y aún así sigue siendo demasiado largo
