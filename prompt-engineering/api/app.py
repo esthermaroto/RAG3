@@ -82,7 +82,7 @@ def generate():
                             "Devuelve solo el título, sin ningún otro texto adicional. "                            
                             "Usa un tono divertido y atractivo. "
                             "Usa emojis si es posible. "
-                            # "¡No superes el límite bajo ninguna circunstancia!"
+                            "Si se indica en la descripción que es un capítulo, añade el capitulo al final del título. Usando la abreviatura 'Cap.' y el número del capítulo. "
                             )
 
             user_prompt = description

@@ -328,16 +328,16 @@ textarea:focus {
 
 /* Estilos base para los badges */
 .model-badge, .time-badge, .char-count-badge, .retry-badge, .retry-btn {
-    font-size: 10px; /* Incrementado de 8px para mejor legibilidad */
-    padding: 4px 8px; /* Incrementado el padding */
-    min-width: fit-content; /* Asegurar que se ajuste al contenido */
+    font-size: 9px; /* Reducido de 10px a 9px para mejor encaje */
+    padding: 3px 6px; /* Reducido el padding de 4px 8px a 3px 6px */
+    min-width: fit-content;
     white-space: nowrap;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7); /* Mantener sombra al texto para mejor contraste */
-    font-weight: 600; /* Ajustado para mejor legibilidad */
-    letter-spacing: 0.3px; /* Mejorar la separación entre letras */
-    border-radius: 5px; /* Bordes más redondeados para suavizar apariencia */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Sombra más suave */
-    border: none; /* Eliminar bordes */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+    font-weight: 600;
+    letter-spacing: 0.2px; /* Reducido de 0.3px a 0.2px */
+    border-radius: 4px; /* Reducido de 5px a 4px */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
 }
 
 /* Restaurar el gradiente específico para cada tipo de badge con colores más contrastados */
@@ -353,8 +353,8 @@ textarea:focus {
 
 .char-count-badge {
     background: linear-gradient(135deg, #00ff8c, #00c4ff);
-    color: #000; /* Texto negro para mejor contraste con fondo claro */
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3); /* Sombra clara para fondo claro */
+    color: #000;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
 }
 
 .retry-badge {
@@ -365,8 +365,7 @@ textarea:focus {
 .retry-btn {
     background: linear-gradient(135deg, #0d85ff, #0747a1);
     color: white;
-    cursor: pointer; /* Asegurar que se vea como botón clicable */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .retry-btn:hover {

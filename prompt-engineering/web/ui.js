@@ -253,3 +253,43 @@ function updatePlaceholder() {
 
 // Init placeholder animation
 setTimeout(updatePlaceholder, 1000);
+
+// Actualizando el formato de los badges en el título generado
+function createTitleBadges(model, time, characterCount, retries) {
+    let badgesContainer = document.createElement('div');
+    badgesContainer.className = 'model-badges';
+    
+    // Badge para el modelo
+    let modelBadge = document.createElement('span');
+    modelBadge.className = 'model-badge';
+    modelBadge.textContent = model;
+    badgesContainer.appendChild(modelBadge);
+    
+    // Badge para el tiempo
+    let timeBadge = document.createElement('span');
+    timeBadge.className = 'time-badge';
+    // Cambio de "segundos" a "seg"
+    timeBadge.textContent = `${time} seg`;
+    badgesContainer.appendChild(timeBadge);
+    
+    // Badge para el conteo de caracteres
+    let charCountBadge = document.createElement('span');
+    charCountBadge.className = 'char-count-badge';
+    // Cambio de "caracteres" a "chars"
+    charCountBadge.textContent = `${characterCount} chars`;
+    badgesContainer.appendChild(charCountBadge);
+    
+    // Badge para los reintentos (si aplica)
+    if (retries !== undefined && retries !== null) {
+        let retryBadge = document.createElement('span');
+        retryBadge.className = 'retry-badge';
+        if (retries === maxRetries) {
+            retryBadge.classList.add('retry-limit-reached');
+        }
+        // Cambio de "Reintentos" a "intentos"
+        retryBadge.textContent = `intentos: ${retries}/${maxRetries}`;
+        badgesContainer.appendChild(retryBadge);
+    }
+    
+    return badgesContainer;
+}
