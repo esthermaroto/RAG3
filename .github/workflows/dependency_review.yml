@@ -1,0 +1,21 @@
+name: 'Dependency Review 🔎📦🐛'
+on: [pull_request]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+     - name: 'Checkout Repository'
+       uses: actions/checkout@v4
+    
+     - name: Dependency Review
+       uses: actions/dependency-review-action@v4
+       with:
+          retry-on-snapshot-warnings: true
+          comment-summary-in-pr: "always"
+          fail-on-scopes: runtime, development
+          warn-on-openssf-scorecard-level: 4
