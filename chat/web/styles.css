@@ -1,0 +1,214 @@
+/* Estilos base */
+:root {
+    --primary-color: #ff0000;
+    --secondary-color: #282828;
+    --glow-color: rgba(255, 0, 0, 0.6);
+    --text-color: #ffffff;
+    --bg-dark: #121212;
+    --bg-card: #1e1e1e;
+    --accent-color: #ff5252;
+    --magic-color-1: #ff42a1;
+    --magic-color-2: #4e42ff;
+    --magic-color-3: #42d6ff;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 0 15px;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-color);
+    text-shadow: 0 0 10px var(--glow-color);
+    display: inline-block;
+}
+
+h1 i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.sparkle {
+    color: var(--magic-color-1);
+    margin-left: 5px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #aaaaaa;
+    margin-bottom: 10px;
+}
+
+/* Contenedor del chat */
+.chat-container {
+    background: var(--bg-card);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+}
+
+/* Historial de chat */
+.chat-history {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: var(--bg-card);
+}
+
+/* Mensajes */
+.message {
+    display: flex;
+    gap: 10px;
+    max-width: 85%;
+}
+
+.message.bot {
+    align-self: flex-start;
+}
+
+.message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.message.user .avatar {
+    background-color: #333;
+    color: #fff;
+}
+
+.message.bot .avatar {
+    background: linear-gradient(135deg, var(--primary-color), #b30000);
+    color: white;
+}
+
+.bubble {
+    padding: 12px 16px;
+    border-radius: 18px;
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    word-break: break-word;
+}
+
+.message.user .bubble {
+    background-color: #333;
+    border-bottom-right-radius: 4px;
+}
+
+.message.bot .bubble {
+    background-color: #222;
+    border-bottom-left-radius: 4px;
+}
+
+/* Área de input */
+.chat-input-area {
+    display: flex;
+    padding: 15px;
+    background-color: var(--bg-card);
+    border-top: 1px solid #333;
+    gap: 10px;
+}
+
+#chatInput {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 25px;
+    border: 2px solid var(--primary-color);
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#chatInput:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--glow-color);
+}
+
+.magic-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.magic-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        margin: 10px auto;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    .chat-container {
+        height: 500px;
+    }
+    
+    .bubble {
+        font-size: 13px;
+        padding: 10px 14px;
+    }
+    
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+}
