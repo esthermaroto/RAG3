@@ -45,8 +45,6 @@ Por otro lado, también mostré durante el vídeo que es importante evaluar la r
 Además, es fundamental recordar que la retroalimentación constante y la iteración en tus prompts son clave para mejorar la calidad de las respuestas que obtienes.
 
 
-
-
 Referencias:
 - [Prompt Engineering](https://www.promptengineering.org/)
 - [Prompt Engineering Guide](https://www.promptingguide.ai/)
