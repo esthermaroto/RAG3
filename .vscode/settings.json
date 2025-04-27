@@ -45,38 +45,38 @@
         {
             "name": "openai/gpt-4o",
             "type": "openai",
-            "api_key": "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",
+            "api_key": "<YOUR_PAT>",
             "base_url": "https://models.github.ai/inference",
             
         },
         {
             "name": "openai/gpt-4.1",
             "type": "openai",
-            "api_key": "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",
+            "api_key": "<YOUR_PAT>",
             "base_url": "https://models.github.ai/inference",
             
         },
         {
             "name": "meta/Llama-4-Maverick-17B-128E-Instruct-FP8",
             "type": "openai",
-            "api_key": "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",
+            "api_key": "<YOUR_PAT>",
             "base_url": "https://models.github.ai/inference",
             
         },
         {
             "name": "meta/Llama-4-Maverick-17B-128E-Instruct-FP8",
             "type": "openai",
-            "api_key": "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",
+            "api_key": "<YOUR_PAT>",
             "base_url": "https://models.github.ai/inference",
             
         },
         {
             "name": "microsoft/Phi-4",
             "type": "openai",
-            "api_key": "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",
+            "api_key": "<YOUR_PAT>",
             "base_url": "https://models.github.ai/inference",
             
         }
     ],
-    "prompty.currentModelConfiguration": "meta/Llama-4-Maverick-17B-128E-Instruct-FP8"
+    "prompty.currentModelConfiguration": "phi4"
 }

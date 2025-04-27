@@ -5,11 +5,11 @@ description: >
     Ejemplo: Una respuesta que responde directamente sin rodeos es más concisa.
 model: 
   api: chat  
-  configuration:
-    name: ${env:OLLAMA_MODEL}
-    type: openai    
-    base_url: ${env:OLLAMA_API_URL}    
-    api_key: ${env:OLLAMA_API_KEY}
+  # configuration:
+  #   name: ${env:OLLAMA_MODEL}
+  #   type: openai    
+  #   base_url: ${env:OLLAMA_API_URL}    
+  #   api_key: ${env:OLLAMA_API_KEY}
   parameters:
     temperature: 0    
 inputs:
