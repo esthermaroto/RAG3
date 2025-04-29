@@ -6,7 +6,9 @@ const chatHistory = document.getElementById('chatHistory');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
 
-// Función para añadir mensajes al chat con el estilo actualizado
+// Historial de la conversación
+const conversationHistory = [];
+
 function addMessage(text, sender = 'user') {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
@@ -43,6 +45,9 @@ function addMessage(text, sender = 'user') {
         messageDiv.style.opacity = '1';
         messageDiv.style.transform = 'translateY(0)';
     }, 10);
+
+    // Guardar en el historial
+    conversationHistory.push({ role: sender === 'user' ? 'user' : 'assistant', content: text });
 }
 
 // En botReply, renderiza markdown en tiempo real
@@ -71,7 +76,7 @@ async function botReply(userText) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            message: userText,
+            messages: conversationHistory
         })
     });
 

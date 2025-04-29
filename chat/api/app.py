@@ -39,7 +39,9 @@ def create_openai_client(source):
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json()
-    user_message = data.get('message', '')
+    user_messages = data.get('messages', '')
+
+    print(f"User messages: {user_messages}")
 
     def generate_stream():     
         client = create_openai_client('github')
@@ -47,15 +49,22 @@ def chat():
         if not client:
             return jsonify({"error": "Failed to create client"}), 500
         
+        system_prompt = ("Eres un asistente para la optimización de un canal de Youtube."
+                         " Tu tarea es ayudar a los usuarios a mejorar su canal de Youtube"
+                         " si te preguntan algo que no sabes, simplemente di que no lo sabes."
+                         " si te preguntan algo que no tiene que ver con Youtube, simplemente di que no pudes ayudar con eso.")
 
-        system_prompt = ("Eres un asistente para la optimización de un canal de Youtube.")
-
+        # Asegura que los mensajes estén en el formato correcto
+        if isinstance(user_messages, list):
+            messages = [{"role": "system", "content": system_prompt}] + user_messages
+        else:
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": str(user_messages)}
+            ]
 
         response = client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message}
-            ],
+            messages=messages,
             stream=True,
             temperature=0.7,
             model=GITHUB_MODELS_MODEL
