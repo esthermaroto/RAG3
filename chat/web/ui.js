@@ -14,7 +14,6 @@ function addMessage(text, sender = 'user') {
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
 
-    // Usar iconos diferentes según el remitente
     if (sender === 'user') {
         avatar.innerHTML = '<i class="fas fa-user"></i>';
     } else {
@@ -23,18 +22,19 @@ function addMessage(text, sender = 'user') {
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = text;
 
-    // Añadir elementos en diferente orden según el remitente
+    if (sender === 'bot' && window.marked) {
+        bubble.innerHTML = marked.parse(text);
+    } else {
+        bubble.textContent = text;
+    }
+
     messageDiv.appendChild(sender === 'bot' ? avatar : bubble);
     messageDiv.appendChild(sender === 'bot' ? bubble : avatar);
 
     chatHistory.appendChild(messageDiv);
-
-    // Asegurar que el scroll siempre esté abajo para ver los últimos mensajes
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
-    // Aplicar animación
     messageDiv.style.opacity = '0';
     messageDiv.style.transform = 'translateY(10px)';
 
@@ -45,7 +45,7 @@ function addMessage(text, sender = 'user') {
     }, 10);
 }
 
-// Función para simular respuestas del bot experto
+// En botReply, renderiza markdown en tiempo real
 async function botReply(userText) {
     // Mostrar indicador de "escribiendo..."
     const typingDiv = document.createElement('div');
@@ -92,11 +92,14 @@ async function botReply(userText) {
         if (value) {
             const chunk = decoder.decode(value, { stream: !done });
             fullText += chunk;
-            bubble.textContent = fullText;
+            if (window.marked) {
+                bubble.innerHTML = marked.parse(fullText);
+            } else {
+                bubble.textContent = fullText;
+            }
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
     }
-
     typingDiv.classList.remove('typing');
 }
 

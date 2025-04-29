@@ -47,21 +47,20 @@ def chat():
         if not client:
             return jsonify({"error": "Failed to create client"}), 500
         
+
+        system_prompt = ("Eres un asistente para la optimización de un canal de Youtube.")
+
+
         response = client.chat.completions.create(
             messages=[
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message}
             ],
             stream=True,
-            temperature=0.9,
+            temperature=0.7,
             model=GITHUB_MODELS_MODEL
         )
 
-        # full_response = ""
-        # for chunk in response:
-        #     if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
-        #         content = chunk.choices[0].delta.content
-        #         full_response += content
-        #         yield content
         for chunk in response:
             # Check if there is content in the delta before trying to yield it
             if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
