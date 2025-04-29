@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from config import GITHUB_MODELS_URL, GITHUB_MODELS_API_KEY, OLLAMA_URL, GITHUB_MODELS_MODEL
 from openai import OpenAI
@@ -41,12 +41,12 @@ def chat():
     data = request.get_json()
     user_message = data.get('message', '')
 
-    client = create_openai_client('github')
+    def generate_stream():     
+        client = create_openai_client('github')
 
-    if not client:
-        return jsonify({"error": "Failed to create client"}), 500
-
-    try:
+        if not client:
+            return jsonify({"error": "Failed to create client"}), 500
+        
         response = client.chat.completions.create(
             messages=[
                 {"role": "user", "content": user_message}
@@ -56,16 +56,19 @@ def chat():
             model=GITHUB_MODELS_MODEL
         )
 
-        full_response = ""
+        # full_response = ""
+        # for chunk in response:
+        #     if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
+        #         content = chunk.choices[0].delta.content
+        #         full_response += content
+        #         yield content
         for chunk in response:
+            # Check if there is content in the delta before trying to yield it
             if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
-                content = chunk.choices[0].delta.content
-                full_response += content
-
-        return jsonify({"response": full_response}), 200
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+                yield chunk.choices[0].delta.content
+ 
+ 
+    return Response(generate_stream(), content_type="text/event-stream")
 
 
 if __name__ == '__main__':

@@ -57,35 +57,14 @@ async function botReply(userText) {
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = 'Escribiendo...';
+    bubble.textContent = '';
 
     typingDiv.appendChild(avatar);
     typingDiv.appendChild(bubble);
     chatHistory.appendChild(typingDiv);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
-    // // Definir respuestas basadas en el contenido
-    // let reply = '';
-    // if (/títul|titulo/i.test(userText)) {
-    //     reply = 'Un buen título para YouTube debe ser claro, incluir palabras clave y despertar curiosidad. ¿Quieres que te sugiera uno?';
-    // } else if (/descripción|descripcion/i.test(userText)) {
-    //     reply = 'La descripción debe resumir el contenido, incluir enlaces relevantes y aprovechar palabras clave para SEO.';
-    // } else if (/seo/i.test(userText)) {
-    //     reply = 'Para mejorar el SEO en YouTube, usa palabras clave en el título, descripción y etiquetas. ¿Sobre qué tema es tu video?';
-    // } else if (/mejora|mejoro/i.test(userText)) {
-    //     reply = 'Para mejorar tu presencia en YouTube, necesitas optimizar tus títulos, miniaturas, descripción y enfocarte en la retención de audiencia. ¿En qué aspecto quieres enfocarte?';
-    // } else {
-    //     reply = '¡Pregúntame sobre títulos, descripciones, SEO o cómo mejorar tu canal de YouTube!';
-    // }
-
-    // Simular tiempo de respuesta y eliminar el indicador de escritura
-    // setTimeout(() => {
-    //     chatHistory.removeChild(typingDiv);
-    //     addMessage(reply, 'bot');
-    // }, 1500);
-
-
-    // Call the API to get a response
+    // Llamar a la API y procesar el stream
     const response = await fetch(`${API_URL}/chat`, {
         method: 'POST',
         headers: {
@@ -95,12 +74,30 @@ async function botReply(userText) {
             message: userText,
         })
     });
-    const data = await response.json();
-    const reply = data.response;
 
-    chatHistory.removeChild(typingDiv);
-    addMessage(reply, 'bot');
+    if (!response.body) {
+        chatHistory.removeChild(typingDiv);
+        addMessage('Error: No se pudo obtener respuesta del modelo.', 'bot');
+        return;
+    }
 
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    let fullText = '';
+
+    while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        if (value) {
+            const chunk = decoder.decode(value, { stream: !done });
+            fullText += chunk;
+            bubble.textContent = fullText;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    }
+
+    typingDiv.classList.remove('typing');
 }
 
 // Event listeners
