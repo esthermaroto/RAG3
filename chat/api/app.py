@@ -19,10 +19,14 @@ def create_openai_client(source):
     Returns:
         OpenAI client instance
     """
+
+    print(f"Github Models URL: {GITHUB_MODELS_URL}")
+    print(f"Github Models API Key: {GITHUB_MODELS_API_KEY}")
+
     if source == 'github':
         return OpenAI(
             base_url=GITHUB_MODELS_URL,
-            api_key="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",
+            api_key=GITHUB_MODELS_API_KEY
         )
     elif source == 'ollama':
         return OpenAI(
@@ -49,7 +53,7 @@ def chat():
             ],
             stream=True,
             temperature=0.9,
-            model="gpt-4.1"
+            model=GITHUB_MODELS_MODEL
         )
 
         full_response = ""
