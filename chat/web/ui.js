@@ -9,6 +9,17 @@ const sendBtn = document.getElementById('sendBtn');
 // Historial de la conversación
 const conversationHistory = [];
 
+// Emojis divertidos para usar como avatares de usuario
+const userEmojis = ["😎", "🤩", "🦸", "🧙", "🥳", "🦊", "🐱", "🐼", "🐯", "🦁", "🐶", "🦄", "🐲", "🐸", "🐵"];
+
+// Función para obtener un emoji aleatorio
+function getRandomUserEmoji() {
+    return userEmojis[Math.floor(Math.random() * userEmojis.length)];
+}
+
+// Guarda el emoji seleccionado para este usuario
+const userEmoji = getRandomUserEmoji();
+
 // Eliminar el modoSelector del body si existe
 const oldModeSelector = document.getElementById('modeSelector');
 if (oldModeSelector) oldModeSelector.remove();
@@ -40,7 +51,8 @@ function addMessage(text, sender = 'user') {
     avatar.className = 'avatar';
 
     if (sender === 'user') {
-        avatar.innerHTML = '<i class="fas fa-user"></i>';
+        avatar.innerHTML = `<span class="user-emoji" style="font-size:1.4em;">${userEmoji}</span>`;
+        avatar.setAttribute('title', 'Tú');
     } else {
         if (currentMode === 'github') {
             avatar.innerHTML = '<i class="fab fa-github"></i>';
