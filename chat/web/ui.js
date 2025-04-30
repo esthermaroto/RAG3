@@ -9,6 +9,29 @@ const sendBtn = document.getElementById('sendBtn');
 // Historial de la conversación
 const conversationHistory = [];
 
+// Eliminar el modoSelector del body si existe
+const oldModeSelector = document.getElementById('modeSelector');
+if (oldModeSelector) oldModeSelector.remove();
+
+// Crear el selector de modo y añadirlo a la barra de entrada
+const chatInputArea = document.querySelector('.chat-input-area');
+const modeSelector = document.createElement('div');
+modeSelector.id = 'modeSelector';
+modeSelector.innerHTML = `
+  <button id="githubMode" class="mode-btn selected" title="Modo GitHub">
+    <i class="fab fa-github"></i>
+  </button>
+  <button id="ollamaMode" class="mode-btn" title="Modo Ollama">
+    <span style="font-size:1.2em;">🦙</span>
+  </button>
+`;
+modeSelector.style.display = 'flex';
+modeSelector.style.alignItems = 'center';
+modeSelector.style.gap = '4px';
+chatInputArea.insertBefore(modeSelector, document.getElementById('sendBtn'));
+
+let currentMode = 'github'; // 'github' o 'ollama'
+
 function addMessage(text, sender = 'user') {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
@@ -19,7 +42,13 @@ function addMessage(text, sender = 'user') {
     if (sender === 'user') {
         avatar.innerHTML = '<i class="fas fa-user"></i>';
     } else {
-        avatar.innerHTML = '<i class="fab fa-youtube"></i>';
+        if (currentMode === 'github') {
+            avatar.innerHTML = '<i class="fab fa-github"></i>';
+            avatar.classList.add('github-bot');
+        } else {
+            avatar.innerHTML = '<span style="font-size:1.2em;">🦙</span>';
+            avatar.classList.add('ollama-bot');
+        }
     }
 
     const bubble = document.createElement('div');
@@ -58,11 +87,22 @@ async function botReply(userText) {
 
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
-    avatar.innerHTML = '<i class="fab fa-youtube"></i>';
+    if (currentMode === 'github') {
+        avatar.innerHTML = '<i class="fab fa-github"></i>';
+        avatar.classList.add('github-bot');
+    } else {
+        avatar.innerHTML = '<span style="font-size:1.2em;">🦙</span>';
+        avatar.classList.add('ollama-bot');
+    }
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = '';
+    
+    // Indicador de tres puntos animados
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'typing-indicator';
+    typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+    bubble.appendChild(typingIndicator);
 
     typingDiv.appendChild(avatar);
     typingDiv.appendChild(bubble);
@@ -76,7 +116,8 @@ async function botReply(userText) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            messages: conversationHistory
+            messages: conversationHistory,
+            source: currentMode // Enviar el modo como parámetro 'source'
         })
     });
 
@@ -91,12 +132,22 @@ async function botReply(userText) {
     let done = false;
     let fullText = '';
 
+    // Eliminar el indicador de typing cuando recibamos el primer chunk
+    let firstChunk = true;
+
     while (!done) {
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
         if (value) {
             const chunk = decoder.decode(value, { stream: !done });
             fullText += chunk;
+            
+            // Reemplazar el indicador de typing por el texto en el primer chunk
+            if (firstChunk) {
+                bubble.innerHTML = '';
+                firstChunk = false;
+            }
+            
             if (window.marked) {
                 bubble.innerHTML = marked.parse(fullText);
             } else {
@@ -107,6 +158,19 @@ async function botReply(userText) {
     }
     typingDiv.classList.remove('typing');
 }
+
+// Cambiar modo al hacer click en los botones
+modeSelector.addEventListener('click', (e) => {
+    if (e.target.closest('#githubMode')) {
+        currentMode = 'github';
+        document.getElementById('githubMode').classList.add('selected');
+        document.getElementById('ollamaMode').classList.remove('selected');
+    } else if (e.target.closest('#ollamaMode')) {
+        currentMode = 'ollama';
+        document.getElementById('ollamaMode').classList.add('selected');
+        document.getElementById('githubMode').classList.remove('selected');
+    }
+});
 
 // Event listeners
 sendBtn.addEventListener('click', () => {

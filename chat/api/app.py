@@ -30,7 +30,7 @@ def create_openai_client(source):
         )
     elif source == 'ollama':
         return OpenAI(
-            base_url=f"{OLLAMA_URL}/v1",
+            base_url=f"{OLLAMA_URL}",
             api_key="ollama",  # Ollama doesn't require a real API key, but one is needed for the SDK
         )
     return None
@@ -40,11 +40,13 @@ def create_openai_client(source):
 def chat():
     data = request.get_json()
     user_messages = data.get('messages', '')
+    source = data.get('source', 'github')  # Default to github if not provided
 
     print(f"User messages: {user_messages}")
+    print(f"Source: {source}")
 
     def generate_stream():     
-        client = create_openai_client('github')
+        client = create_openai_client(source)
 
         if not client:
             return jsonify({"error": "Failed to create client"}), 500
@@ -63,19 +65,30 @@ def chat():
                 {"role": "user", "content": str(user_messages)}
             ]
 
-        response = client.chat.completions.create(
-            messages=messages,
-            stream=True,
-            temperature=0.7,
-            model=GITHUB_MODELS_MODEL
-        )
+        # Selección dinámica del modelo
+        if source == 'ollama':
+            from config import OLLAMA_MODEL
+            model = OLLAMA_MODEL
+        else:
+            model = GITHUB_MODELS_MODEL
 
-        for chunk in response:
-            # Check if there is content in the delta before trying to yield it
-            if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
-                yield chunk.choices[0].delta.content
- 
- 
+        try:
+            response = client.chat.completions.create(
+                messages=messages,
+                stream=True,
+                temperature=0.7,
+                model=model
+            )
+
+            for chunk in response:
+                if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
+                    yield chunk.choices[0].delta.content
+        except Exception as e:
+            import traceback
+            print('Error en la llamada a OpenAI client:', e)
+            traceback.print_exc()
+            yield f"\n[ERROR llamando al modelo: {str(e)}]"
+
     return Response(generate_stream(), content_type="text/event-stream")
 
 
