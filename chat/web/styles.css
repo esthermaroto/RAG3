@@ -374,12 +374,129 @@ h1 i {
 }
 
 .avatar.github-bot {
-    background: #fff;
-    color: #111;
-}
-.avatar.ollama-bot {
-    background: orange;
+    background: linear-gradient(135deg, #2b3137, #24292e);
     color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #f6f8fa;
+    animation: githubPulse 3s infinite alternate;
+}
+
+.avatar.github-bot i {
+    font-size: 22px;
+    position: relative;
+    z-index: 2;
+    animation: scaleGithub 2s ease infinite;
+    color: #f6f8fa;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes githubPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+}
+
+@keyframes scaleGithub {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.avatar.github-bot::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(246, 248, 250, 0.2) 0%, transparent 70%);
+    opacity: 0;
+    animation: githubShine 4s infinite;
+    transform-origin: center center;
+}
+
+@keyframes githubShine {
+    0% {
+        opacity: 0;
+        transform: rotate(0deg);
+    }
+    30% {
+        opacity: 0.8;
+    }
+    70% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(360deg);
+    }
+}
+
+.avatar.ollama-bot {
+    background: linear-gradient(135deg, #ff9a00, #ff4e00);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 154, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #fff3e6;
+    animation: ollamaPulse 3s infinite alternate;
+}
+
+.avatar.ollama-bot span {
+    position: relative;
+    z-index: 2;
+    animation: bounce 2s ease infinite;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+}
+
+@keyframes ollamaPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 154, 0, 0.4);
+    }
+    100% {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 154, 0, 0.7);
+    }
+}
+
+.avatar.ollama-bot::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    animation: ollamaGlow 4s infinite;
+}
+
+@keyframes ollamaGlow {
+    0% {
+        opacity: 0;
+        transform: rotate(0deg);
+    }
+    25% {
+        opacity: 0.8;
+    }
+    75% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(360deg);
+    }
 }
 
 /* Animación de carga (tres puntos) */
@@ -525,4 +642,67 @@ h1 i {
     background: linear-gradient(135deg, var(--magic-color-2), var(--magic-color-3));
     color: white;
     box-shadow: 0 0 10px rgba(66, 214, 255, 0.5);
+}
+
+.mode-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(66, 214, 255, 0.4);
+}
+
+.mode-btn.selected:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(66, 214, 255, 0.6);
+}
+
+/* Animación para los botones del selector de modo */
+.mode-btn i, .mode-btn span {
+    transition: transform 0.3s ease;
+}
+
+.mode-btn:hover i, .mode-btn:hover span {
+    transform: scale(1.2);
+}
+
+.mode-btn.selected i, .mode-btn.selected span {
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.15);
+    }
+}
+
+.avatar-shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    opacity: 0;
+    animation: shineEffect 3s infinite;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+@keyframes shineEffect {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    40% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
 }

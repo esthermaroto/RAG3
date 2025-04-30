@@ -57,9 +57,15 @@ function addMessage(text, sender = 'user') {
         if (currentMode === 'github') {
             avatar.innerHTML = '<i class="fab fa-github"></i>';
             avatar.classList.add('github-bot');
+            // Añadir elemento para efecto de brillo extra
+            const shine = document.createElement('div');
+            shine.className = 'avatar-shine';
+            avatar.appendChild(shine);
+            avatar.setAttribute('title', 'GitHub Copilot');
         } else {
             avatar.innerHTML = '<span style="font-size:1.2em;">🦙</span>';
             avatar.classList.add('ollama-bot');
+            avatar.setAttribute('title', 'Ollama');
         }
     }
 
@@ -102,9 +108,15 @@ async function botReply(userText) {
     if (currentMode === 'github') {
         avatar.innerHTML = '<i class="fab fa-github"></i>';
         avatar.classList.add('github-bot');
+        // Añadir elemento para efecto de brillo extra
+        const shine = document.createElement('div');
+        shine.className = 'avatar-shine';
+        avatar.appendChild(shine);
+        avatar.setAttribute('title', 'GitHub Copilot está escribiendo...');
     } else {
         avatar.innerHTML = '<span style="font-size:1.2em;">🦙</span>';
         avatar.classList.add('ollama-bot');
+        avatar.setAttribute('title', 'Ollama está escribiendo...');
     }
 
     const bubble = document.createElement('div');
