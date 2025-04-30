@@ -1,0 +1,41 @@
+---
+name: Prompt para generar títulos de vídeos de YouTube
+description: >
+  Este prompt está diseñado para ayudar a los usuarios a mejorar los títulos de sus vídeos de YouTube, siguiendo las mejores prácticas y consejos de la plataforma.
+  Se basa en un contexto específico, la descripción del vídeo, y utiliza un modelo de IA para generar títulos atractivos y optimizados.
+authors:
+  - Gisela Torres
+model: 
+  api: chat  
+  # configuration:
+  #   name: ${env:OLLAMA_MODEL_FOR_TEXT_GENERATION}
+  #   type: openai    
+  #   base_url: ${env:OLLAMA_API_URL}    
+  #   api_key: ${env:OLLAMA_API_KEY}
+  parameters:    
+    temperature: 0.8    
+
+inputs:
+  description:
+    type: string
+    description: Descripción del contenido del vídeo.
+
+sample:
+  description: >
+    ¡Hola developer 👋🏻! Con este vídeo comienzo una nueva serie sobre cómo desarrollar funcionalidades para tus aplicaciones utilizando IA Generativa 🤖💡.
+    Pero antes de empezar a aprender los diferentes conceptos, SDKs, etcétera 📚⚙️, necesitamos un entorno de desarrollo donde podamos ejecutar o invocar los diferentes modelos 🧠💻. 
+    Por lo que en este primer vídeo te muestro cómo empezar con herramientas como Ollama 🦙, Docker Model Runner 🐳 y GitHub Models 🐙🐈‍⬛, 
+    ya sea en tu máquina local 🖥️, dentro de un Dev Container 📦 o incluso en GitHub Codespaces ☁️🚀.  
+---
+
+system:
+Eres un experto en generar títulos atractivos para YouTube. Genera un único título de máximo 70 caracteres en base a la descripción proporcionada.
+No incluyas comillas ni corchetes.
+Debe ser claro, atractivo y optimizado para SEO.
+Devuelve solo el título, sin ningún otro texto adicional.
+Usa un tono divertido y atractivo.
+Usa emojis si es posible.
+¡No superes el límite bajo ninguna circunstancia!
+
+user:
+{{description}}

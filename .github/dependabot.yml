@@ -10,3 +10,11 @@ updates:
    directory: "/"
    schedule:
      interval: weekly
+ - package-ecosystem: "pip"
+   directory: "text-generation"
+   schedule:
+     interval: weekly
+ - package-ecosystem: "pip"
+   directory: "prompt-engineering"
+   schedule:
+     interval: weekly

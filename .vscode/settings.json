@@ -1,0 +1,82 @@
+{
+    "prompty.modelConfigurations": [
+        {            
+            "name": "qwen2.5",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1"
+        },
+        {
+            "name": "llama3.1",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1"            
+        },
+        {
+            "name": "phi4",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1"            
+        },
+        {
+            "name": "gemma3",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1"            
+        },
+        {
+            "name": "mistral-nemo",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1"            
+        },
+        {
+            "name": "mistral-small3.1",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1"            
+        },
+        {
+            "name": "deepseek-r1",
+            "type": "openai",
+            "api_key": "ollama",
+            "base_url": "http://host.docker.internal:11434/v1"            
+        },
+        {
+            "name": "openai/gpt-4o",
+            "type": "openai",
+            "api_key": "<YOUR_PAT>",
+            "base_url": "https://models.github.ai/inference",
+            
+        },
+        {
+            "name": "openai/gpt-4.1",
+            "type": "openai",
+            "api_key": "<YOUR_PAT>",
+            "base_url": "https://models.github.ai/inference",
+            
+        },
+        {
+            "name": "meta/Llama-4-Maverick-17B-128E-Instruct-FP8",
+            "type": "openai",
+            "api_key": "<YOUR_PAT>",
+            "base_url": "https://models.github.ai/inference",
+            
+        },
+        {
+            "name": "meta/Llama-4-Maverick-17B-128E-Instruct-FP8",
+            "type": "openai",
+            "api_key": "<YOUR_PAT>",
+            "base_url": "https://models.github.ai/inference",
+            
+        },
+        {
+            "name": "microsoft/Phi-4",
+            "type": "openai",
+            "api_key": "<YOUR_PAT>",
+            "base_url": "https://models.github.ai/inference",
+            
+        }
+    ],
+    "prompty.currentModelConfiguration": "phi4"
+}

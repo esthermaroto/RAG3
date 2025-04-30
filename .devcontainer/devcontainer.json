@@ -9,12 +9,17 @@
 			"extensions": [
 				"ms-windows-ai-studio.windows-ai-studio",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"
+				"GitHub.copilot-chat",
+				"ms-toolsai.prompty",
+				"ritwickdey.LiveServer"
 			]
 		}
 	},
 	"hostRequirements": {
 		"memory": "16gb",
 		"cpus": 4
+	},
+	{
+		"postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt"
 	}
 }

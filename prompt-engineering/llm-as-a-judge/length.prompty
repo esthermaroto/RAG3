@@ -1,0 +1,68 @@
+---
+name: Length (Longitud)
+description: >
+    Objetivo: Medir la longitud del título generado. En este caso te demostraré que la mayoría de los modelos de IA no son buenos para evaluar la longitud de un texto.
+model: 
+  api: chat  
+  # configuration:
+  #   name: ${env:OLLAMA_MODEL}
+  #   type: openai    
+  #   base_url: ${env:OLLAMA_API_URL}    
+  #   api_key: ${env:OLLAMA_API_KEY}    
+  parameters:
+    temperature: 0    
+inputs:
+  video_description:
+    type: string
+    description: Descripción del contenido del video.
+  generated_title:
+    type: string
+    description: Título generado para el video.
+outputs:
+  score:
+    type: int
+    description: Puntuación de longitud (1 a 5).
+  explanation:
+    type: string
+    description: Explicación de la puntuación asignada.
+sample:
+  video_description: >
+    ¡Hola developer 👋🏻! Con este vídeo comienzo una nueva serie sobre cómo desarrollar funcionalidades para tus aplicaciones utilizando IA Generativa 🤖💡.
+    Pero antes de empezar a aprender los diferentes conceptos, SDKs, etcétera 📚⚙️, necesitamos un entorno de desarrollo donde podamos ejecutar o invocar los diferentes modelos 🧠💻. 
+    Por lo que en este primer vídeo te muestro cómo empezar con herramientas como Ollama 🦙, Docker Model Runner 🐳 y GitHub Models 🐙🐈‍⬛, 
+    ya sea en tu máquina local 🖥️, dentro de un Dev Container 📦 o incluso en GitHub Codespaces ☁️🚀.  
+  generated_title: >
+    ¡Desbloquea la IA Generativa 🤖💡: Configuración del Entorno 🚀!
+
+---
+
+system:
+Lenght evalúa la longitud del título generado. Como parte de la respuesta proporciona el número de caracteres que has contado, incluyendo espacios y signos de puntuación.
+
+- **1 estrella:** El título es demasiado largo y no se muestra completo.
+- **2 estrellas:** El título es largo y poco conciso, lo que dificulta su comprensión.
+- **3 estrellas:** El título es moderadamente largo, pero aún se puede entender.
+- **4 estrellas:** El título es mayormente conciso y directo.
+- **5 estrellas:** El título es breve, claro y fácil de recordar.
+
+**Example 1**
+video_description: "¡Hola developer! 👋🏻 Aquí tienes el segundo vídeo de mi serie sobre IA Generativa para developers. En él nos metemos de lleno en el código, trabajando con uno de los escenarios más comunes: la generación de texto ✍️. Te mostraré cómo llamar a diferentes modelos en modo stream y no-stream, utilizando SDKs como Mistral y OpenAI. Además, veremos una aplicación de ejemplo que te enseñará cómo integrar estos modelos en el frontend, visualizando los resultados que llegan desde una API conectada con GitHub Models🚀 y Ollama 🦙"
+generated_title: "🚀 IA Generativa: Generación de texto con Mistral, OpenAI, GitHub Models y Ollama"
+output:
+{"score": 3, "explanation": "El título es moderadamente largo, no cumple con la longitud recomendada. Este título tiene 83 caracteres."}
+
+**Example 2**
+video_description: "¡Hola developer! 👋🏻 Aquí tienes el segundo vídeo de mi serie sobre IA Generativa para developers. En él nos metemos de lleno en el código, trabajando con uno de los escenarios más comunes: la generación de texto ✍️. Te mostraré cómo llamar a diferentes modelos en modo stream y no-stream, utilizando SDKs como Mistral y OpenAI. Además, veremos una aplicación de ejemplo que te enseñará cómo integrar estos modelos en el frontend, visualizando los resultados que llegan desde una API conectada con GitHub Models🚀 y Ollama 🦙"
+generated_title: "🌟 IA Generativa para Developers: Generación de Texto con Mistral & OpenAI 🚀 — ¡Descubre Cómo Integrar en tu Frontend! #IA #GeneraciónDeTexto #Mistral #OpenAI #SDKs 🧑‍💻📝"
+output:
+{"score": 1, "explanation": "El título es demasiado largo y no se muestra completo. Este título tiene 173 caracteres."}
+
+**Example 3**
+video_description: "¡Hola developer! 👋🏻 Aquí tienes el segundo vídeo de mi serie sobre IA Generativa para developers. En él nos metemos de lleno en el código, trabajando con uno de los escenarios más comunes: la generación de texto ✍️. Te mostraré cómo llamar a diferentes modelos en modo stream y no-stream, utilizando SDKs como Mistral y OpenAI. Además, veremos una aplicación de ejemplo que te enseñará cómo integrar estos modelos en el frontend, visualizando los resultados que llegan desde una API conectada con GitHub Models🚀 y Ollama 🦙"
+generated_title: "IA Generativa: Generación de texto con Mistral, OpenAI, GitHub Models y Ollama"
+{"score": 4, "explanation": "El título es mayormente conciso y directo. Este título tiene 78 caracteres."}
+
+user:
+{{video_description}}
+{{generated_title}}
+output:

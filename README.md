@@ -6,6 +6,7 @@
 
 - [💡 Capítulo 1: Todo lo que necesitas para empezar a desarrollar apps con IA Generativa GRATIS 🧠✨](#-capítulo-1-todo-lo-que-necesitas-para-empezar-a-desarrollar-apps-con-ia-generativa-gratis-)
 - [📝 Capítulo 2: Introducción a la generación de texto con IA Generativa 📝🤖🪄✨ ](text-generation/README.md)
+- [🖼️ Capítulo 3: Prompt Engineering 🤖💬 ](prompt-engineering/README.md)
 
 ## 💡 Capítulo 1: Todo lo que necesitas para empezar a desarrollar apps con IA Generativa GRATIS  🧠✨
 
