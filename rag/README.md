@@ -36,7 +36,9 @@ python 2.convert_markdown_sin_chunks.py
 
 Ok, ya sabemos hacer embeddings. ¿Y ahora qué hacemos con esto? lo que vamos a hacer es almacenarlos en una base de datos de tipo vectorial que he añadido como parte de esta Dev Container. En este caso, he utilizado Qdrant, pero puedes usar cualquier otra base de datos de tipo vectorial.
 
+Puedes ver su interfaz accediendo a [http://localhost:6333/dashboard](http://localhost:6333/dashboard) y podrás ver lo que vamos almacenando. Por ahora no hay absolutamente nada. 
 
+```bash
 
 # ¿ Cuál es el proceso completo?
 
