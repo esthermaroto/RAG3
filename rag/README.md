@@ -22,20 +22,19 @@ Una vez que lo tenemos instalado puedes ejecutar este archivo que tiene un conju
 python 1.convert_urls.py
 ```
 
-¡Perfecto! Ya tenemos un conjunto de documentos en formato Markdown que podemos usar para mejorar las respuestas del modelo. Al ejecutar este script se generará un directorio llamado `youtube_guides` que contendrá los documentos en formato Markdown. Pero esto no es suficiente. Ahora lo que tenemos que hacer es convertir estos documentos a lo que se conoce como embeddings. Esto convertirá estos documentos a un formato vectorial para lo cual tenemos modelos que nos pueden ayudar a hacer esta conversión. Para convertirlos puedes usar este otro script:
+¡Perfecto! Ya tenemos un conjunto de documentos en formato Markdown que podemos usar para mejorar las respuestas del modelo. Al ejecutar este script se generará un directorio llamado `youtube_guides` que contendrá los documentos en formato Markdown. Pero esto no es suficiente. Ahora lo que tenemos que hacer es convertir estos documentos a lo que se conoce como embeddings. Esto convertirá estos documentos a un formato vectorial para lo cual tenemos modelos que nos pueden ayudar a hacer esta conversión. Esta es la pinta que tienen estos documentos cuando los convertimos a embeddings:
 
 ```bash
 python 2.convert_markdown.py
 ```
 
+Si intentas hacer este proceso sin partir los docuemtos en partes más pequeñas, es posible que te encuentres con un error de longitud máxima. Aquí tienes un ejemplo de cómo se vería el error:
 
+```bash
+python 2.convert_markdown_sin_chunks.py
+```
 
-
-
-
-
-# Embeddings
-
+Ok, ya sabemos hacer embeddings. ¿Y ahora qué hacemos con esto? lo que vamos a hacer es almacenarlos en una base de datos de tipo vectorial que he añadido como parte de esta Dev Container. En este caso, he utilizado Qdrant, pero puedes usar cualquier otra base de datos de tipo vectorial.
 
 
 
