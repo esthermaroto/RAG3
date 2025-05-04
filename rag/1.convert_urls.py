@@ -1,9 +1,14 @@
 from markitdown import MarkItDown
 import os
 import re
+from rich import print
+from rich.console import Console
 
 # Esta es la herramienta que nos ayudará a convertir en formato markdown lo que le pasemos
 md = MarkItDown()
+
+# Crear una consola de rich
+console = Console()
 
 # Para este ejemplo usamos documentación de YouTube relacionadas con los canales y sus vídeos
 URLs = [
@@ -35,6 +40,7 @@ URLs = [
 output_dir = "youtube_guides"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
+    console.print(f":file_folder: [bold green]Directorio creado:[/bold green] {output_dir}")
 
 # Función para crear un nombre de archivo válido, que no tenga 
 def create_valid_filename(name):
@@ -61,7 +67,6 @@ for item in URLs:
             f.write(f"# {name}\n\n")
             # Convertir el resultado a string si no lo es ya
             f.write(result.markdown) 
-        print(f"Archivo guardado: {filepath}")
+        console.print(f":white_check_mark: [bold cyan]Archivo guardado:[/bold cyan] {filepath}")
     else:
-        print(f"No se pudo convertir la URL: {url}")
-
+        console.print(f":x: [bold red]No se pudo convertir la URL:[/bold red] {url}")
