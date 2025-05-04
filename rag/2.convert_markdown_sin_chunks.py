@@ -16,7 +16,7 @@ with open(markdown_file_path, "r", encoding="utf-8") as file:
 
 # Pasar el contenido del archivo como input
 response = client.embeddings.create(
-    model=os.getenv("GITHUB_MODELS_MODEL"),
+    model=os.getenv("GITHUB_MODELS_MODEL_FOR_EMBEDDINGS"),
     input=markdown_content
 )
 

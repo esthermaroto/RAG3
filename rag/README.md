@@ -87,7 +87,12 @@ Cuando guardas vectores en Qdrant, estás almacenando representaciones numérica
 
 ### 3. Realizar consulta del usuario
 
-Una vez almacenados los embeddings, se pueden realizar consultas para recuperar información relevante y generar respuestas con un modelo LLM.
+Una vez almacenados los embeddings, se pueden realizar consultas para recuperar información relevante y generar respuestas con un modelo LLM. Para ello, se utiliza el siguiente script:
+
+```bash
+python 4.query_embeddings_and_generate_response.py
+```
+
 
 ## ¿Cuál es el proceso completo?
 

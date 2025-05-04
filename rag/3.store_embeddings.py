@@ -135,7 +135,7 @@ for markdown_file_path in markdown_files:
         print(f"Procesando fragmento {i+1}/{len(chunks)} del archivo {file_name}")
         try:
             response = client.embeddings.create(
-                model=os.getenv("GITHUB_MODELS_MODEL"),
+                model=os.getenv("GITHUB_MODELS_MODEL_FOR_EMBEDDINGS"),
                 input=chunk
             )
             all_embeddings.append((response, title, i))
@@ -160,7 +160,8 @@ for markdown_file_path in markdown_files:
                 "payload": {
                     "titulo": file_title,
                     "parte": chunk_index,
-                    "archivo": file_name
+                    "archivo": file_name,
+                    "text": chunks[i]
                 }
             }]
         )

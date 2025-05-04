@@ -74,7 +74,7 @@ for i, chunk in enumerate(chunks):
     print(f"Procesando fragmento {i+1}/{len(chunks)}")
     try:
         response = client.embeddings.create(
-            model=os.getenv("GITHUB_MODELS_MODEL"),
+            model=os.getenv("GITHUB_MODELS_MODEL_FOR_EMBEDDINGS"),
             input=chunk
         )
         all_embeddings.append(response)
