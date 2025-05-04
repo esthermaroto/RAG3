@@ -27,7 +27,7 @@ def query_embeddings(query):
     search_results = qdrant_client.search(
         collection_name=collection_name,
         query_vector=query_vector,
-        limit=3,  # Número de resultados a devolver
+        limit=3,  # Número de resultados a devolver. Si te pasas puede dar error porque te pases del limite de tokens de tu modelo. Prueba cambiando este número.
         with_payload=True  # Incluir el payload en los resultados
     )
     
