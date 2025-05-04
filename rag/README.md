@@ -38,7 +38,16 @@ Ok, ya sabemos hacer embeddings. ¿Y ahora qué hacemos con esto? lo que vamos a
 
 Puedes ver su interfaz accediendo a [http://localhost:6333/dashboard](http://localhost:6333/dashboard) y podrás ver lo que vamos almacenando. Por ahora no hay absolutamente nada. 
 
+## 2. Almacenar los embeddings en la base de datos
+
+Ahora que ya sabemos cómo convertir los documentos a embeddings, lo que vamos a hacer es almacenarlos en la base de datos. Para ello, vamos a usar el siguiente script:
+
 ```bash
+python 3.store_embeddings.py
+```
+
+Este script se encargará de almacenar los embeddings en la base de datos. Si todo ha ido bien, deberías ver algo como esto en la interfaz de Qdrant:
+![Qdrant](https://raw.githubusercontent.com/rafaelmartin/rafaelmartin/main/images/qdrant.png)
 
 # ¿ Cuál es el proceso completo?
 
