@@ -22,16 +22,20 @@ try:
     qdrant_client.get_collections()
     print("Conexión a Qdrant establecida correctamente.")
 
-    # Comprobar si la colección existe
+    # Eliminar siempre la colección "youtube_guides" si existe y crearla de nuevo
     collection_name = "youtube_guides"
     collections = qdrant_client.get_collections()
-    if collection_name not in collections:
-        # Crear la colección si no existe
-        qdrant_client.create_collection(
-            collection_name=collection_name,
-            vectors_config=VectorParams(size=3072, distance=Distance.DOT),
-        )
-        print(f"Colección '{collection_name}' creada en Qdrant.")
+    if collection_name in collections:
+        # Eliminar la colección si existe
+        qdrant_client.delete_collection(collection_name)
+        print(f"Colección '{collection_name}' eliminada de Qdrant.")
+    
+    # Crear la colección si no existe
+    qdrant_client.create_collection(
+        collection_name=collection_name,
+        vectors_config=VectorParams(size=3072, distance=Distance.DOT),
+    )
+    print(f"Colección '{collection_name}' creada en Qdrant.")
 
 except Exception as e:
     print(f"Error al conectar a Qdrant: {e}")
