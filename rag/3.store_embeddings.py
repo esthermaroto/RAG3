@@ -9,6 +9,8 @@ from qdrant_client.models import Distance, VectorParams
 
 load_dotenv()
 
+collection_name = "youtube_guides"
+
 client = OpenAI(
     base_url=os.getenv("GITHUB_MODELS_URL"),
     api_key=os.getenv("GITHUB_TOKEN"),
@@ -22,18 +24,29 @@ try:
     qdrant_client.get_collections()
     print("Conexión a Qdrant establecida correctamente.")
 
-    # Eliminar siempre la colección "youtube_guides" si existe y crearla de nuevo
-    collection_name = "youtube_guides"
+    print(f"Comprobando si la colección {collection_name} ya existe...")    
+    
     collections = qdrant_client.get_collections()
-    if collection_name in collections:
-        # Eliminar la colección si existe
+    
+    # Extraer los nombres de las colecciones
+    collection_names = [collection.name for collection in collections.collections]
+    
+    print(f"Las colecciones disponibles son: {collection_names}")
+
+    if collection_name in collection_names:
+        print(f"La colección '{collection_name}' ya existe. Eliminándola...")
         qdrant_client.delete_collection(collection_name)
         print(f"Colección '{collection_name}' eliminada de Qdrant.")
     
     # Crear la colección si no existe
     qdrant_client.create_collection(
         collection_name=collection_name,
-        vectors_config=VectorParams(size=3072, distance=Distance.DOT),
+        vectors_config=VectorParams(size=3072, distance=Distance.DOT), # El size debe coincidir con el tamaño de los embeddings. Esto significa que el modelo de OpenAI que estás usando genera vectores de 3072 dimensiones.
+       # La distancia significa que se usará la distancia coseno para calcular la similitud entre los vectores. Hay varias opciones:
+       # - Distance.DOT: Producto punto
+       # - Distance.EUCLID: Distancia euclidiana
+       # - Distance.COSINE: Distancia coseno
+       # - Distance.MANHATTAN
     )
     print(f"Colección '{collection_name}' creada en Qdrant.")
 
