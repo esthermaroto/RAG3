@@ -1,11 +1,15 @@
 from qdrant_client import QdrantClient
 from openai import OpenAI
 from dotenv import load_dotenv
+from rich.console import Console
+from rich.panel import Panel
+from rich.markdown import Markdown
 import os
 
 load_dotenv()
+console = Console()
 
-collection_name = "youtube_guides"
+collection_name = os.getenv("QDRANT_COLLECTION_NAME")
 client = OpenAI(
     base_url=os.getenv("GITHUB_MODELS_URL"),
     api_key=os.getenv("GITHUB_TOKEN")
@@ -14,44 +18,35 @@ client = OpenAI(
 # Inicializar el cliente de Qdrant
 qdrant_client = QdrantClient(url=os.getenv("QDRANT_URL"))
 
-# Definir una función para realizar consultas
-
-
 def query_embeddings(query):
-    # 1. Convertir la consulta a un embedding
+    console.print(":mag: [bold cyan]Generando embedding para la consulta...[/bold cyan]")
     embedding_response = client.embeddings.create(
         model=os.getenv("GITHUB_MODELS_MODEL_FOR_EMBEDDINGS"),
         input=query
     )
     query_vector = embedding_response.data[0].embedding
 
-    # 2. Buscar documentos similares en Qdrant
+    console.print(":satellite: [bold cyan]Buscando documentos similares en Qdrant...[/bold cyan]")
     search_results = qdrant_client.query_points(
         collection_name=collection_name,
         query=query_vector,
-        # Número de resultados a devolver. Si te pasas puede dar error porque te pases del limite de tokens de tu modelo. Prueba cambiando este número.
         limit=3,
-        with_payload=True  # Incluir el payload en los resultados
+        with_payload=True
     ).points
 
+    console.print(f":page_facing_up: [bold green]{len(search_results)} resultados encontrados.[/bold green]")
     return search_results
 
-
 def generate_response_with_embeddings(query, search_results):
-    # Construir el contexto a partir de los resultados
     context = ""
     for i, result in enumerate(search_results):
-
         title = result.payload.get("titulo", "Sin título")
         part = result.payload.get("parte", 0)
         file_name = result.payload.get("archivo", "Sin archivo")
-
         context += f"\n--- Información relevante #{i+1} (de {title}, archivo {file_name}, parte {part}) ---\n"
-        # Agregamos el texto completo recuperado del documento
         chunk_text = result.payload.get("text", "No hay texto disponible")
         context += chunk_text + "\n"
 
-    # Crear el prompt final combinando la consulta con el contexto
     prompt = f"""Responde a la siguiente consulta utilizando la información proporcionada.
                 Si la información proporcionada no es suficiente para responder, puedes indicarlo.
 
@@ -68,7 +63,7 @@ def generate_response_with_embeddings(query, search_results):
                      "Siempre añade la referencia a la fuente de información utilizada para responder, utilizando el formato: "
                      "Referencia: [nombre del archivo] [parte del archivo]")
 
-    # Generar respuesta con el contexto
+    console.print(":robot: [bold cyan]Generando respuesta con el modelo...[/bold cyan]")
     response = client.chat.completions.create(
         model=os.getenv("GITHUB_MODELS_MODEL_FOR_GENERATION"),
         messages=[
@@ -79,11 +74,10 @@ def generate_response_with_embeddings(query, search_results):
 
     return response.choices[0].message.content
 
-
 # 1. Consulta que quiero hacer
-# query = "¿Qué me aconsejas para grabar un video?"
-# query = "¿Algún consejo para editar vídeos?"
 query = "¿Qué me aconsejas para subir vídeos a YouTube?"
+
+console.print(Panel(f":thinking_face: [bold yellow]Consulta:[/bold yellow] {query}", title="Consulta del usuario"))
 
 # 2. Obtener los embeddings más similares a la consulta
 search_results = query_embeddings(query)
@@ -92,5 +86,4 @@ search_results = query_embeddings(query)
 result = generate_response_with_embeddings(query, search_results)
 
 # 4. Imprimir la respuesta generada
-print("\nRespuesta:")
-print(result)
+console.print(Panel(Markdown(result), title=":sparkles: Respuesta Generada", subtitle=":clapper: YouTube Assistant"))
