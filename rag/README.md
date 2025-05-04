@@ -47,7 +47,40 @@ python 3.store_embeddings.py
 ```
 
 Este script se encargará de almacenar los embeddings en la base de datos. Si todo ha ido bien, deberías ver algo como esto en la interfaz de Qdrant:
-![Qdrant](https://raw.githubusercontent.com/rafaelmartin/rafaelmartin/main/images/qdrant.png)
+
+
+### 2.1 Configuración de las colecciones en Qdrant
+
+Quizás esta es la parte que más me costó entender. En Qdrant, las colecciones son como tablas en una base de datos relacional. Cada colección tiene un nombre y contiene un conjunto de puntos (o embeddings) que están relacionados entre sí. En este caso, hemos creado una colección llamada `youtube_guides` que contendrá todos los embeddings que hemos generado a partir de los documentos de la documentación de YouTube. Las colecciones son la forma en la que Qdrant organiza los datos. Esta tiene una configuración asociada que tiene dos valores importantes:
+
+- **Size**: Se 
+- **Distance**: Este es el tipo de distancia que se va a usar para calcular la similitud entre los puntos. En este caso, hemos usado `Cosine` que es el más común para este tipo de tareas. 
+
+Aquí tienes algunos ejemplos sencillos para entender cuándo usar cada una de las métricas de distancia en Qdrant:
+
+Producto escalar (Dot):
+
+Ejemplo: Tienes vectores de características de productos en una tienda online, y todos los vectores están normalizados.
+Uso: Utiliza el producto escalar para encontrar productos similares basándote en características normalizadas como color, tamaño, y categoría.
+Similitud del coseno (Cosine):
+
+Ejemplo: Estás comparando documentos de texto, como artículos de blog o descripciones de videos de YouTube.
+Uso: Utiliza la similitud del coseno para encontrar documentos que tienen contenido similar, independientemente de la longitud del texto.
+Distancia euclidiana (Euclid):
+
+Ejemplo: Tienes datos de ubicación geográfica de usuarios en una aplicación de mapas.
+Uso: Utiliza la distancia euclidiana para calcular la distancia directa entre dos puntos geográficos y encontrar usuarios cercanos.
+Distancia Manhattan (Manhattan):
+
+Ejemplo: Estás analizando datos de ventas donde cada vector representa las ventas de diferentes productos en diferentes regiones.
+Uso: Utiliza la distancia Manhattan para medir la diferencia absoluta en ventas entre regiones, lo cual puede ser útil para identificar patrones de ventas.
+
+
+Cada registro se llama punto y tiene un ID único. Este ID es el que vamos a usar para recuperar la información más adelante. Por
+
+
+## 3. Realizar consulta del usuario
+
 
 # ¿ Cuál es el proceso completo?
 
