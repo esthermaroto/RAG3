@@ -1,7 +1,6 @@
 from markitdown import MarkItDown
 import os
 import re
-from rich import print
 from rich.console import Console
 
 # Esta es la herramienta que nos ayudará a convertir en formato markdown lo que le pasemos
@@ -37,7 +36,7 @@ URLs = [
 ]
 
 # Se crea un directorio para guardar los archivos si no existe
-output_dir = "youtube_guides"
+output_dir = "/workspaces/hoy-empiezo-con-ia-generativa/rag/youtube_guides"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
     console.print(f":file_folder: [bold green]Directorio creado:[/bold green] {output_dir}")
