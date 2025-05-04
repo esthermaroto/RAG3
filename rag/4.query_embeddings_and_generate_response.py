@@ -74,16 +74,24 @@ def generate_response_with_embeddings(query, search_results):
 
     return response.choices[0].message.content
 
-# 1. Consulta que quiero hacer
-query = "¿Qué me aconsejas para subir vídeos a YouTube?"
+# 1. Genero un bucle para poder preguntar de forma continua
+while True:
+    # Solicitar la consulta al usuario
+    query = console.input(":question: [bold blue]¿Cuál es tu consulta? (Escribe 'salir' para terminar): [/bold blue]")
+    if query.lower() == "salir":
+        console.print(":wave: [bold red]Saliendo...[/bold red]")
+        break
+    if not query.strip():
+        console.print(":warning: [bold red]Consulta vacía. Por favor, introduce una consulta válida.[/bold red]")
+        continue   
 
-console.print(Panel(f":thinking_face: [bold yellow]Consulta:[/bold yellow] {query}", title="Consulta del usuario"))
+    console.print(Panel(f":thinking_face: [bold yellow]Consulta:[/bold yellow] {query}", title="Consulta del usuario"))
 
-# 2. Obtener los embeddings más similares a la consulta
-search_results = query_embeddings(query)
+    # 2. Obtener los embeddings más similares a la consulta
+    search_results = query_embeddings(query)
 
-# 3. Generar la respuesta utilizando los embeddings como contexto
-result = generate_response_with_embeddings(query, search_results)
+    # 3. Generar la respuesta utilizando los embeddings como contexto
+    result = generate_response_with_embeddings(query, search_results)
 
-# 4. Imprimir la respuesta generada
-console.print(Panel(Markdown(result), title=":sparkles: Respuesta Generada", subtitle=":clapper: YouTube Assistant"))
+    # 4. Imprimir la respuesta generada
+    console.print(Panel(Markdown(result), title=":sparkles: Respuesta Generada", subtitle=":clapper: YouTube Assistant"))
