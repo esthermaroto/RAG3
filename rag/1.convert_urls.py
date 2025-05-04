@@ -2,9 +2,10 @@ from markitdown import MarkItDown
 import os
 import re
 
+# Esta es la herramienta que nos ayudará a convertir en formato markdown lo que le pasemos
 md = MarkItDown()
 
-# URLs como diccionario con url y nombre
+# Para este ejemplo usamos documentación de YouTube relacionadas con los canales y sus vídeos
 URLs = [
     {"url": "https://support.google.com/youtube/answer/9527654?hl=es", "name": "Configurar la audiencia de un canal o un vídeo"},
     {"url": "https://support.google.com/youtube/answer/11913617?sjid=11557296865847177507-EU", "name": "Consejos para subir vídeos de YouTube"},
@@ -30,12 +31,12 @@ URLs = [
     {"url": "https://support.google.com/youtube/answer/12356784?sjid=11557296865847177507-EU", "name": "Consejos sobre los estrenos de YouTube"},
 ]
 
-# Crear directorio para guardar los archivos si no existe
+# Se crea un directorio para guardar los archivos si no existe
 output_dir = "youtube_guides"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Función para crear un nombre de archivo válido
+# Función para crear un nombre de archivo válido, que no tenga 
 def create_valid_filename(name):
     # Reemplazar caracteres no válidos y espacios
     valid_name = re.sub(r'[^\w\s-]', '', name.lower())

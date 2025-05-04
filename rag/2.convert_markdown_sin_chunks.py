@@ -10,7 +10,7 @@ client = OpenAI(
 )
 
 # Leer el contenido del archivo Markdown
-markdown_file_path = "youtube_guides/configurar_la_audiencia_de_un_canal_o_un_vídeo.md"  # Cambia esto por la ruta de tu archivo Markdown
+markdown_file_path = "/workspaces/hoy-empiezo-con-ia-generativa/rag/youtube_guides/configurar_la_audiencia_de_un_canal_o_un_vídeo.md"  # Cambia esto por la ruta de tu archivo Markdown
 with open(markdown_file_path, "r", encoding="utf-8") as file:
     markdown_content = file.read()
 

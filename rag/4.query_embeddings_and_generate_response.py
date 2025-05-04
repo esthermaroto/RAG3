@@ -68,7 +68,8 @@ Respuesta:"""
     return response.choices[0].message.content
 
 # 1. Consulta que quiero hacer
-query = "¿Qué me aconsejas para grabar un video?"
+# query = "¿Qué me aconsejas para grabar un video?"
+query = "¿Algún consejo para editar vídeos?"
 
 # 2. Obtener los embeddings más similares a la consulta
 search_results = query_embeddings(query)

@@ -78,5 +78,6 @@
             
         }
     ],
-    "prompty.currentModelConfiguration": "phi4"
+    "prompty.currentModelConfiguration": "phi4",
+    "python.analysis.autoImportCompletions": true
 }
