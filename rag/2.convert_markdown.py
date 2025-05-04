@@ -3,6 +3,11 @@ from dotenv import load_dotenv
 import os
 import tiktoken
 import re
+from rich.console import Console
+from rich.progress import track
+
+# Inicializar Rich Console
+console = Console()
 
 load_dotenv()
 
@@ -74,37 +79,43 @@ def split_into_chunks(text, max_tokens=8000, encoding_name="cl100k_base"):
 
 def generate_embeddings(chunks):
     all_embeddings = []
-    for i, chunk in enumerate(chunks):
-        print(f"Procesando fragmento {i+1}/{len(chunks)}")
+    for i, chunk in track(enumerate(chunks), description="Generando embeddings... 🚀", total=len(chunks)):
         try:
             response = client.embeddings.create(
                 model=os.getenv("GITHUB_MODELS_MODEL_FOR_EMBEDDINGS"),
                 input=chunk
             )
             all_embeddings.append(response)
-            print(f"Fragmento {i+1} procesado correctamente.")
+            console.log(f"[green]Fragmento {i+1} procesado correctamente. ✅[/green]")
         except Exception as e:
-            print(f"Error al procesar el fragmento {i+1}: {e}")
+            console.log(f"[red]Error al procesar el fragmento {i+1}: {e} ❌[/red]")
     
     return all_embeddings
+
 
 def print_embeddings(all_embeddings):
     # Imprimir la respuesta
     for i, embedding in enumerate(all_embeddings):
-        print(f"Embedding del fragmento {i+1}:")
-        print(embedding)
+        console.print(f"[bold blue]Embedding del fragmento {i+1}:[/bold blue] 📊")
+        console.print(embedding)
 
 
 # 1. Leer el contenido del archivo Markdown
+console.print("[cyan]Leyendo el archivo Markdown... 📄[/cyan]")
 markdown_content = read_markdown_file(markdown_file_path)
 
 # 2. Dividir el contenido en fragmentos más pequeños
-chunks = split_into_chunks(
-    markdown_content, max_tokens=7000)  # Margen de seguridad
-print(f"El archivo ha sido dividido en {len(chunks)} fragmentos.")
+console.print("[cyan]Dividiendo el contenido en fragmentos... ✂️[/cyan]")
+chunks = split_into_chunks(markdown_content, max_tokens=7000)  # Margen de seguridad
+console.print(f"[green]El archivo ha sido dividido en {len(chunks)} fragmentos. ✅[/green]")
 
 # 3. Generar embeddings para cada fragmento
 all_embeddings = generate_embeddings(chunks)
 
+# Pulsa una tecla para mostrar los embeddings
+console.print("[yellow]Pulsa Enter para mostrar los embeddings generados...[/yellow]")
+input()
+
 # 4. Imprimir la respuesta
+console.print("[cyan]Imprimiendo los embeddings generados... 📊[/cyan]")
 print_embeddings(all_embeddings)
