@@ -60,7 +60,7 @@ def generate_response_with_embeddings(query, search_results):
     system_prompt = ("Eres un asistente experto en creación de contenido para YouTube."
                      "Tu tarea es responder a las preguntas de los usuarios utilizando la información proporcionada en el contexto."
                      "Si la información no es suficiente, indícalo y sugiere buscar más información."
-                     "Siempre añade la referencia a la fuente de información utilizada para responder, utilizando el formato: "
+                     "Siempre añade la referencia a la fuente de información utilizada para responder, en fragmento si es posible, y al final de la respuesta, utilizando el formato: "
                      "Referencia: [nombre del archivo] [parte del archivo]")
 
     console.print(":robot: [bold cyan]Generando respuesta con el modelo...[/bold cyan]")
