@@ -1,3 +1,4 @@
+from calendar import c
 import sys
 from httpx import get
 from openai import OpenAI
@@ -148,6 +149,11 @@ def process_markdown_files(markdown_files):
             
             console.print(f":floppy_disk: [bold green]Embeddings del archivo {file_name} guardados en Qdrant.[/bold green]")
     return id_counter
+
+console.print(":sparkles: [bold green]Iniciando el proceso de creación de embeddings...[/bold green]")
+
+console.print(":wastebasket: [yellow]Eliminando la colección anterior de Qdrant (si existe)...[/yellow]")
+recreate_qdrant_collection()
 
 markdown_dir_path = "/workspaces/hoy-empiezo-con-ia-generativa/rag/youtube_guides"
 markdown_files = get_markdown_files(markdown_dir_path)
